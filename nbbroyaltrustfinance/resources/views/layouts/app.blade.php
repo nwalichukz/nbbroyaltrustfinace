@@ -106,7 +106,7 @@
         </ul>
         <div class="nav-drawer__foot">
             <a href="{{ url('/client-login') }}" class="btn btn--outline-light btn--block">Client Login</a>
-            <a href="{{ url('/open-account') }}" class="btn btn--primary btn--block">Open an Account</a>
+            <a href="{{ url('/register') }}" class="btn btn--primary btn--block">Open an Account</a>
         </div>
     </aside>
 
