@@ -48,7 +48,7 @@
                 <span>London &middot; United Kingdom</span>
             </div>
             <div class="topbar__right">
-                <a href="{{ url('/client-login') }}">Client Login</a>
+                <a href="{{ url('/login') }}">Client Login</a>
                 <span class="topbar__divider" aria-hidden="true"></span>
 
                 @include('partials.language-switcher')
@@ -79,8 +79,8 @@
             </ul>
 
             <div class="nav__cta">
-                <a href="{{ url('/client-login') }}" class="btn btn--outline-dark">Client Login</a>
-                <a href="{{ url('/open-account') }}" class="btn btn--primary">Open an Account</a>
+                <a href="{{ url('/login') }}" class="btn btn--outline-dark">Client Login</a>
+                <a href="{{ url('/register') }}" class="btn btn--primary">Open an Account</a>
             </div>
 
             <button class="nav__toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">
