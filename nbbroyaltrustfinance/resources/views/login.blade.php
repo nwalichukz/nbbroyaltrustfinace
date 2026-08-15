@@ -15,7 +15,7 @@
                         <p>Sign in to manage your accounts, payments and statements.</p>
                     </div>
 
-                    <form action="{{ route('login.store') ?? url('/login') }}" method="POST" novalidate>
+                    <form action="{{ url('/login') }}" method="POST" novalidate>
                         @csrf
 
                         <div class="form-field">
@@ -40,7 +40,7 @@
                     </form>
 
                     <div class="auth-card__foot">
-                        New to Nbb Trust Kapital? <a href="{{ route('register') ?? url('/register') }}">Open an account</a>
+                        New to Nbb Trust Kapital? <a href="{{ url('/register') }}">Open an account</a>
                     </div>
                 </div>
 
