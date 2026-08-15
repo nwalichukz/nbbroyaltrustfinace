@@ -48,7 +48,7 @@
                 <span>London &middot; United Kingdom</span>
             </div>
             <div class="topbar__right">
-                <a href="{{ route('client-login') ?? '#' }}">Client Login</a>
+                <a href="{{ url('/client-login') }}">Client Login</a>
                 <span class="topbar__divider" aria-hidden="true"></span>
 
                 @include('partials.language-switcher')
@@ -79,7 +79,7 @@
             </ul>
 
             <div class="nav__cta">
-                <a href="{{ route('client-login') ?? '#' }}" class="btn btn--outline-dark">Client Login</a>
+                <a href="{{ url('/client-login') }}" class="btn btn--outline-dark">Client Login</a>
                 <a href="{{ url('/open-account') }}" class="btn btn--primary">Open an Account</a>
             </div>
 
@@ -105,7 +105,7 @@
             <li><a href="{{ url('/contact') }}">Contact</a></li>
         </ul>
         <div class="nav-drawer__foot">
-            <a href="{{ route('client-login') ?? '#' }}" class="btn btn--outline-light btn--block">Client Login</a>
+            <a href="{{ url('/client-login') }}" class="btn btn--outline-light btn--block">Client Login</a>
             <a href="{{ url('/open-account') }}" class="btn btn--primary btn--block">Open an Account</a>
         </div>
     </aside>
@@ -166,7 +166,7 @@
                         <li><a href="{{ url('/security') }}">Security Centre</a></li>
                         <li><a href="{{ url('/faqs') }}">FAQs</a></li>
                         <li><a href="{{ url('/complaints') }}">Complaints Procedure</a></li>
-                        <li><a href="{{ route('client-login') ?? '#' }}">Client Login</a></li>
+                        <li><a href="{{ url('/client-login') }}">Client Login</a></li>
                     </ul>
                 </div>
             </div>
