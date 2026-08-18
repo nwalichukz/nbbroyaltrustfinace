@@ -13,7 +13,7 @@
         </div>
         <div class="db-page-head__actions">
             <button class="btn btn--outline-dark">Export CSV</button>
-            <a href="{{ route('dashboard.add-funds') ?? url('/dashboard/add-funds') }}" class="btn btn--primary">Add Funds</a>
+            <a href="{{ url('/dashboard/add-funds') }}" class="btn btn--primary">Add Funds</a>
         </div>
     </div>
 
@@ -55,79 +55,65 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php($users = [
-                        ['name' => 'Daniel Owusu', 'email' => 'd.owusu@example.com', 'initials' => 'DO', 'acct' => 'NBB-GB-40218', 'country' => 'Ghana', 'balance' => '£0.00', 'status' => 'pending', 'label' => 'Pending', 'joined' => '11 Aug 2026'],
-                        ['name' => 'Fatima Al-Sayed', 'email' => 'f.alsayed@example.com', 'initials' => 'FA', 'acct' => 'NBB-GB-40219', 'country' => 'United Arab Emirates', 'balance' => '£0.00', 'status' => 'pending', 'label' => 'Pending', 'joined' => '11 Aug 2026'],
-                        ['name' => 'Amara Chukwu', 'email' => 'amara.c@example.com', 'initials' => 'AC', 'acct' => 'NBB-GB-38820', 'country' => 'Nigeria', 'balance' => '£24,650.00', 'status' => 'active', 'label' => 'Active', 'joined' => '02 Feb 2025'],
-                        ['name' => 'James Whitfield', 'email' => 'j.whitfield@example.com', 'initials' => 'JW', 'acct' => 'NBB-GB-38712', 'country' => 'United Kingdom', 'balance' => '£118,204.50', 'status' => 'active', 'label' => 'Active', 'joined' => '19 Nov 2024'],
-                        ['name' => 'Priya Nair', 'email' => 'priya.nair@example.com', 'initials' => 'PN', 'acct' => 'NBB-GB-39044', 'country' => 'Singapore', 'balance' => '£6,410.00', 'status' => 'active', 'label' => 'Active', 'joined' => '30 Mar 2025'],
-                        ['name' => 'Olumide Bakare', 'email' => 'o.bakare@example.com', 'initials' => 'OB', 'acct' => 'NBB-GB-37905', 'country' => 'Nigeria', 'balance' => '£1,220.00', 'status' => 'suspended', 'label' => 'Suspended', 'joined' => '14 Jul 2024'],
-                        ['name' => 'Chen Wei', 'email' => 'chen.wei@example.com', 'initials' => 'CW', 'acct' => 'NBB-GB-40221', 'country' => 'Singapore', 'balance' => '£0.00', 'status' => 'pending', 'label' => 'Pending', 'joined' => '10 Aug 2026'],
-                    ])
+                    
                     @foreach($users as $u)
                         <tr data-row>
                             <td><input type="checkbox" aria-label="Select {{ $u['name'] }}"></td>
                             <td>
                                 <div class="cell-user">
-                                    <span class="avatar">{{ $u['initials'] }}</span>
+                                    <span class="avatar">{{ strtoupper(substr($u->name, 0, 2))}}
+
+                                    </span>
                                     <div class="cell-user__meta">
                                         <strong>{{ $u['name'] }}</strong>
                                         <span>{{ $u['email'] }}</span>
                                     </div>
                                 </div>
                             </td>
-                            <td class="cell-mono">{{ $u['acct'] }}</td>
+                            <td class="cell-mono">{{ $u->userwallet->wallet_no}}</td>
                             <td>{{ $u['country'] }}</td>
-                            <td class="cell-mono">{{ $u['balance'] }}</td>
-                            <td><span class="status-pill status-pill--{{ $u['status'] }}">{{ $u['label'] }}</span></td>
-                            <td>{{ $u['joined'] }}</td>
-                            <td>
-                                <div class="row-actions">
-                                    @if($u['status'] === 'pending')
-                                        <button class="icon-btn approve" aria-label="Approve {{ $u['name'] }}"
-                                            data-confirm
-                                            data-confirm-title="Approve this client?"
-                                            data-confirm-body="<strong>{{ $u['name'] }}</strong> ({{ $u['email'] }}) will be granted an active Nbb Trust Kapital account."
-                                            data-confirm-label="Approve"
-                                            data-confirm-style="primary"
-                                            data-success-message="{{ $u['name'] }} approved.">
-                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l6 6L20 6"/></svg>
-                                        </button>
-                                    @endif
-
-                                    @if($u['status'] === 'active')
-                                        <button class="icon-btn suspend" aria-label="Suspend {{ $u['name'] }}"
-                                            data-confirm
-                                            data-confirm-title="Suspend this account?"
-                                            data-confirm-body="<strong>{{ $u['name'] }}</strong> will lose access to online banking and card transactions until reinstated. This does not delete the account."
-                                            data-confirm-label="Suspend account"
-                                            data-confirm-style="danger"
-                                            data-success-message="{{ $u['name'] }}'s account suspended.">
-                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
-                                        </button>
-                                    @endif
-
-                                    @if($u['status'] === 'suspended')
-                                        <button class="icon-btn approve" aria-label="Reinstate {{ $u['name'] }}"
-                                            data-confirm
-                                            data-confirm-title="Reinstate this account?"
-                                            data-confirm-body="<strong>{{ $u['name'] }}</strong> will regain full access to their account."
-                                            data-confirm-label="Reinstate"
-                                            data-confirm-style="primary"
-                                            data-success-message="{{ $u['name'] }}'s account reinstated.">
-                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M5.5 15a7 7 0 0012.6 2.5M18.5 9A7 7 0 005.9 6.5"/></svg>
-                                        </button>
-                                    @endif
-
-                                    <button class="icon-btn remove" aria-label="Remove {{ $u['name'] }}"
-                                        data-confirm
-                                        data-confirm-title="Remove this client permanently?"
-                                        data-confirm-body="This will permanently close <strong>{{ $u['name'] }}'s</strong> account and remove their access. This action cannot be undone &mdash; make sure any remaining balance has been settled first."
-                                        data-confirm-label="Remove permanently"
-                                        data-confirm-style="danger"
-                                        data-success-message="{{ $u['name'] }}'s account removed.">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m-8 0l1 12a1 1 0 001 1h6a1 1 0 001-1l1-12"/></svg>
+                            <td class="cell-mono">{{ $u->userwallet->balance }}</td>
+                            <td><span class="status-pill status-pill--{{ $u['status'] }}">{{ $u->status }}</span></td>
+                            <td>{{ $u->created_at }}</td>
+                            <td style="text-align:right;">
+                                <!-- Dropdown Menu Container -->
+                                <div class="dropdown" style="position: relative; display: inline-block;">
+                                    <button class="icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Actions for {{ $u['name'] }}">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
                                     </button>
+                                    
+                                    <div class="dropdown-menu dropdown-menu-end" style="position: absolute; right: 0; z-index: 1000; display: none; background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-radius: 6px; padding: 0.5rem 0; min-width: 180px; text-align: left;">
+                                        
+                                        <!-- Fund Account -->
+                                        <a class="dropdown-item" href="{{ url('/dashboard/users/' . $u['id'] . '/fund') }}" style="display: block; padding: 0.5rem 1rem; color: #1e293b; text-decoration: none; font-size: 0.875rem;">
+                                            Fund account
+                                        </a>
+
+                                        <!-- Suspend / Reinstate -->
+                                        @if($u['status'] === 'active')
+                                            <a class="dropdown-item" href="{{ url('/dashboard/users/' . $u['id'] . '/suspend') }}" style="display: block; padding: 0.5rem 1rem; color: #d97706; text-decoration: none; font-size: 0.875rem;"
+                                                data-confirm data-confirm-title="Suspend this account?" data-confirm-body="<strong>{{ $u['name'] }}</strong> will lose access to online banking." data-confirm-label="Suspend" data-confirm-style="danger">
+                                                Suspend account
+                                            </a>
+                                        @elseif($u['status'] === 'suspended')
+                                            <a class="dropdown-item" href="{{ url('/dashboard/users/' . $u['id'] . '/reinstate') }}" style="display: block; padding: 0.5rem 1rem; color: #059669; text-decoration: none; font-size: 0.875rem;">
+                                                Reinstate account
+                                            </a>
+                                        @endif
+
+                                        <!-- Stop External Transfer -->
+                                        <a class="dropdown-item" href="{{ url('/dashboard/users/' . $u['id'] . '/stop-transfer') }}" style="display: block; padding: 0.5rem 1rem; color: #d97706; text-decoration: none; font-size: 0.875rem;">
+                                            Stop external transfer
+                                        </a>
+
+                                        <div style="height: 1px; background: #e2e8f0; margin: 0.25rem 0;"></div>
+
+                                        <!-- Delete Account -->
+                                        <a class="dropdown-item text-danger" href="{{ url('/dashboard/users/' . $u['id'] . '/delete') }}" style="display: block; padding: 0.5rem 1rem; color: #dc2626; text-decoration: none; font-size: 0.875rem;"
+                                            data-confirm data-confirm-title="Remove client permanently?" data-confirm-body="This will permanently close <strong>{{ $u['name'] }}'s</strong> account." data-confirm-label="Remove permanently" data-confirm-style="danger">
+                                            Delete account
+                                        </a>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -147,5 +133,6 @@
             </div>
         </div>
     </div>
+    
 
 @endsection

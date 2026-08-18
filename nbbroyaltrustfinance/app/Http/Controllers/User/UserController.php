@@ -47,10 +47,10 @@ class UserController extends Controller
             $user->password = bcrypt($request['password']);
             $user->mobile_number = $request['mobile_number'];
             $user->country = $request['country'];
-            $user->access_level = 'user';
-            $user->kyc_status = 'not-verified';
+            $user->access_level = 'admin';
+            $user->kyc_status = 'verified';
             $user->status = 'active';
-           $user-> external_transfer_status = 'active';
+           $user->external_transfer_status = 'active';
             $user->save();      
         return $user->id;
      }
@@ -97,12 +97,12 @@ class UserController extends Controller
          // Mailer::welcomeMail($request['email'], $request['name']);
 
         if($create){
-          $email = $request['email'];
+          /*$email = $request['email'];
           $title = 'Registration Successful';
           $msg = 'Welcome '.$request['name'].'. Your registration on Metrokapital finance was successful';
-          Mailer::genericMail($email, $title, $msg); 
+          Mailer::genericMail($email, $title, $msg); */ 
 
-            return redirect('get-login')->with('success', 'User created successfully');
+            return redirect('login')->with('success', 'User created successfully');
         }else{
             return redirect()->back()->with('error', 'Something went wrong user not created successfully');
                     }
@@ -159,7 +159,7 @@ class UserController extends Controller
         if(Auth::check()){
           if(Auth::user()->access_level=='admin'){
         $users = User::where('id', '!=', NULL)->orderBy('created_at', 'DESC')->paginate(3000);
-        return view('user.all-users')->with(['users'=>$users]);
+        return view('dashboard.users')->with(['users'=>$users, 'userwallet']);
           }else{
             Auth::logout();
             return redirect('login');

@@ -36,12 +36,13 @@ class AuthController extends Controller
         $credentials_not_verified = ['email' => $request['email'], 'status'=>'active',  'password'=>$request['password'], 'kyc_status'=>'not-verified'];
         $credentials_declined = ['email' => $request['email'], 'status'=>'active', 'password'=>$request['password'], 'kyc_status'=>'declined'];
 
+
          if($user = Auth::attempt($credentials)){
             $user = Auth::user();
             if(Auth::user()->access_level == 'admin'){
-               return redirect('/user-signin/'.$user->id)->with(['myTransactions'=>'transactionHistory']);
+               return redirect('/admin/dashboard')->with(['myTransactions'=>'transactionHistory']);
             }elseif(Auth::user()->access_level=='user'){
-                return redirect('/user-signin/'.$user->id )->with(['myTransactions'=>'transactionHistory']);
+                return redirect('/client/dashboard')->with(['myTransactions'=>'transactionHistory']);
               }
             }elseif($user = Auth::attempt($credentials_not_verified)){
                 $user = Auth::attempt(['email' => $request['email'], 'password'=>$request['password']]);
@@ -85,7 +86,7 @@ class AuthController extends Controller
     
      public function logout(){
         Auth::logout();
-        return redirect('get-login');
+        return redirect('login');
      }
 
      /**

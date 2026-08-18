@@ -36,46 +36,34 @@ use App\Http\Controllers\DashboardController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::post('post-login', [AuthController::class, 'login']);
 
 Route::get('/', function () {
     //return view('landing/main-index');
      return view('index');
 });
 
-Route::get('/dashb', function () {
+Route::get('admin/dashboard', function () {
     //return view('landing/main-index');
      return view('/dashboard/index');
 });
 
 
 
-Route::get('/citizenship-inv-grenada', function () {
-    return view('landing/citizenship-by-investment-grenada');
-});
 
-Route::get('/contact-us', function () {
-    return view('landing/contact')->with(['title'=>'Contact Us']);
-});
+
+
 
 Route::get('/faq', function () {
     return view('landing/faq')->with(['title'=>'FAQ']);
 });
 
-Route::get('/about-us', function () {
-    return view('landing/about-us')->with(['title'=>'Contact Us']);
-});
 
-Route::get('/islamic-banking', function () {
-    return view('landing/islamic-banking')->with(['title'=>'Contact Us']);
-});
 
-Route::get('/real-estate-inv-antigua-and-barbuda', function () {
-    return view('landing/real-estate-investment-antigua-and-barbuda');
-});
 
-Route::get('/residency-inv-australia', function () {
-    return view('landing/residency-investment-australia');
-});
+
+
+
 
 
 Route::get('/get-transactions', function () {
@@ -111,10 +99,11 @@ Route::get('/get-insurance', function () {
     return view('dashboard/src/html/pages/insurance');
 });
 
-
-Route::get('/get-login', function () {
-    return view('dashboard/src/html/pages/auths/auth-login');
+/*
+Route::get('/login', function () {
+    return view('login');
 });
+*/
 
 Route::get('/get-login-no-kyc', function () {
     return view('dashboard/src/html/pages/auths/auth-login-no-kyc');
@@ -135,7 +124,7 @@ Route::view('/about', 'about');
 Route::view('/contact', 'contact');
 Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
 
-Route::view('/login', 'login');
+Route::view('/login', 'login')->name('login'); 
 Route::view('/register', 'register');
 
 
@@ -166,7 +155,7 @@ Route::get('/admin/user-list', [UserController::class, 'userList']);
 Route::get('/admin/all-users', [UserController::class, 'getAll']);
 Route::get('/admin/get-account-officer', [UserController::class, 'getAccountOfficer']);
 
-Route::any('/post-login', [AuthController::class, 'login']);
+
 
 Route::get('/user-signin/{id}', [AuthController::class, 'dashboard']);
 
@@ -191,33 +180,6 @@ Route::get('/admin/end-inv/{id}', [InvestmentController::class, 'endInv']);
 Route::get('/dashboard/get-investment-page/{id}', [InvestmentController::class, 'returnInvestmentPage']);
 
 
-
-Route::get('/admin/get-citizenship-by-investment', [CitizenByInvestment::class, 'addACitizenByInvestmentPage']);
-Route::post('/admin/create-citizenship-by-investment', [CitizenByInvestment::class, 'create']);
-Route::get('/admin/get-citizenship-by-investment/{id}', [CitizenByInvestment::class, 'get']);
-Route::get('/admin/delete-citizenship-by-investment/{id}', [CitizenByInvestment::class, 'delete']);
-Route::post('/admin/update-citizenship-by-investment', [CitizenByInvestment::class, 'update']);
-Route::get('/admin/get-all-citizenship-by-investment', [CitizenByInvestment::class, 'getAll']);
-Route::get('/view-citizenship-by-investment/{id}', [CitizenByInvestment::class, 'getCitizenInvPage']);
-
-
-Route::get('/admin/get-residency-by-investment', [ResidencyByInvestment::class, 'addResidencyByInvestmentPage']);
-Route::post('/admin/create-residency-by-investment', [ResidencyByInvestment::class, 'create']);
-Route::get('/admin/get-residency-by-investment/{id}', [ResidencyByInvestment::class, 'get']);
-Route::get('/admin/delete-residency-by-investment/{id}', [ResidencyByInvestment::class, 'delete']);
-Route::post('/admin/update-residency-by-investment', [ResidencyByInvestment::class, 'update']);
-Route::get('/admin/get-all-residency-by-investment', [ResidencyByInvestment::class, 'getAll']);
-Route::get('/view-residency-by-investment/{id}', [ResidencyByInvestment::class, 'getResidencyInvPage']);
-
-
-
-Route::post('/admin/create-residency-by-real-estate', [ResidencyByRealEstate::class, 'create']);
-Route::get('/admin/get-residency-by-real-estate/{id}', [ResidencyByRealEstate::class, 'get']);
-Route::get('/admin/delete-residency-by-real-estate/{id}', [ResidencyByRealEstate::class, 'delete']);
-Route::post('/admin/update-residency-by-real-estate', [ResidencyByRealEstate::class, 'update']);
-Route::get('/admin/get-all-residency-by-real-estate', [ResidencyByRealEstate::class, 'getAll']);
-Route::get('/admin/get-residency-by-real-estate', [ResidencyByRealEstate::class, 'addResidencyByRealEstatePage']);
-Route::get('/view-residency-by-real-estate/{id}', [ResidencyByRealEstate::class, 'getRealEstateInvPage']);
 
 
 
@@ -378,6 +340,7 @@ Route::prefix('{locale?}')
 | middleware once accounts are wired up, e.g.
 | Route::middleware(['auth', 'client'])->prefix('client')->group(...).
 */
+Route::middleware(['auth'])->group(function () {
 Route::view('/client/dashboard', 'client.dashboard');
 Route::view('/client/accounts', 'client.accounts');
 Route::view('/client/transfers', 'client.transfers');
@@ -390,6 +353,8 @@ Route::view('/client/profile', 'client.profile');
 
 Route::view('/client/support', 'client.support');
 
+});
+
 /*
 |--------------------------------------------------------------------------
 | Admin Console — resources/views/layouts/dashboard.blade.php
@@ -397,9 +362,10 @@ Route::view('/client/support', 'client.support');
 | In production, wrap this group in your admin auth middleware, e.g.
 | Route::middleware(['auth', 'admin'])->prefix('dashboard')->group(...).
 */
-Route::view('/dashboard', 'dashboard.index');
+Route::middleware(['auth'])->group(function () {
+Route::view('/admin/dashboard', 'dashboard.index');
 Route::view('/dashboard/users', 'dashboard.users');
 Route::view('/dashboard/add-funds', 'dashboard.add-funds');
-
+});
 Route::redirect('/client-login', '/login'); 
 

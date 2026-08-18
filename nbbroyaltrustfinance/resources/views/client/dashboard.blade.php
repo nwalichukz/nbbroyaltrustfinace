@@ -7,8 +7,8 @@
 
     <div class="welcome-banner">
         <div>
-            <h1>Welcome back, {{ $clientName ?? 'Amara' }}</h1>
-            <p>Here's a snapshot of your accounts and recent activity.</p>
+            <h1>Welcome back, {{ Auth::user()->name }}</h1>
+            <p>Here's a snapshot of your account and recent activity.</p>
         </div>
         <div class="welcome-banner__actions">
             <a href="{{ url('client/transfers') ?? url('/client/transfers') }}" class="btn btn--primary">Send Money</a>
@@ -16,47 +16,19 @@
         </div>
     </div>
 
-    {{-- ---------- Account cards ---------- --}}
-    <div class="account-grid">
+    {{-- ---------- Single Account Card ---------- --}}
+    <div class="account-grid" style="grid-template-columns: 1fr; max-width: 450px; margin-bottom: 1.5rem;">
         <div class="account-card" data-balance-card>
-            <div class="account-card__top">
-                <span class="account-card__label">Current Account</span>
-                <button class="account-card__eye" type="button" data-balance-toggle aria-label="Show or hide balance">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
-                </button>
-            </div>
-            <div class="account-card__balance" data-balance="24650.00">&pound;24,650.00</div>
-            <div class="account-card__meta">
-                <span>NBB-GB-38820</span>
-                <span>GBP</span>
-            </div>
-        </div>
-
-        <div class="account-card variant-blue" data-balance-card>
             <div class="account-card__top">
                 <span class="account-card__label">Savings Account</span>
                 <button class="account-card__eye" type="button" data-balance-toggle aria-label="Show or hide balance">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
             </div>
-            <div class="account-card__balance" data-balance="58200.00">&pound;58,200.00</div>
+            <div class="account-card__balance" data-balance="24650.00">&dollar;{{ Auth::user()->userwallet->balance }}</div>
             <div class="account-card__meta">
-                <span>NBB-GB-38821</span>
-                <span>GBP &middot; 3.4% AER</span>
-            </div>
-        </div>
-
-        <div class="account-card variant-orange" data-balance-card>
-            <div class="account-card__top">
-                <span class="account-card__label">Multi-Currency Account</span>
-                <button class="account-card__eye" type="button" data-balance-toggle aria-label="Show or hide balance">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
-                </button>
-            </div>
-            <div class="account-card__balance" data-balance="9840.00">$9,840.00</div>
-            <div class="account-card__meta">
-                <span>NBB-GB-38822</span>
-                <span>USD &middot; EUR</span>
+                <span>{{ Auth::user()->userwallet->wallet_no }}</span>
+                <span>USD</span>
             </div>
         </div>
     </div>
@@ -81,55 +53,30 @@
         </a>
     </div>
 
-    <div class="db-form-grid db-form-grid--split">
-
-        {{-- ---------- Spending chart ---------- --}}
-        <div class="db-card">
-            <div class="db-card__head">
-                <div>
-                    <span class="u-eyebrow">Last 7 days</span>
-                    <h2 style="margin-top:0.4rem;">Money in vs. money out</h2>
-                </div>
-            </div>
-            <div class="bar-chart" role="img" aria-label="Bar chart of money in versus money out over the last seven days">
-                @php($days = ['Mon' => [30,58], 'Tue' => [42,64], 'Wed' => [55,40], 'Thu' => [28,70], 'Fri' => [66,82], 'Sat' => [90,35], 'Sun' => [20,18]])
-                @foreach($days as $day => $vals)
-                    <div class="bar-chart__col">
-                        <div style="display:flex; align-items:flex-end; gap:4px; height:120px;">
-                            <div class="bar-chart__bar" style="height:{{ $vals[0] }}%;" title="In"></div>
-                            <div class="bar-chart__bar is-accent" style="height:{{ $vals[1] }}%;" title="Out"></div>
-                        </div>
-                        <span class="bar-chart__label">{{ $day }}</span>
-                    </div>
-                @endforeach
+    {{-- ---------- Security nudge & Beneficiaries ---------- --}}
+    <div style="display:flex; flex-direction:column; gap:1.2rem; margin-top:1.4rem;">
+        <div class="nudge-card">
+            <span class="nudge-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></span>
+            <div>
+                <h3>Turn on two-factor authentication</h3>
+                <p>Add an extra layer of protection to your account in under a minute.</p>
+                <a href="{{ url('client/profile') ?? url('/client/profile') }}" class="btn btn--outline-dark" style="font-size:0.78rem; padding:0.55rem 1rem;">Set up now</a>
             </div>
         </div>
 
-        {{-- ---------- Security nudge ---------- --}}
-        <div style="display:flex; flex-direction:column; gap:1.2rem;">
-            <div class="nudge-card">
-                <span class="nudge-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></span>
-                <div>
-                    <h3>Turn on two-factor authentication</h3>
-                    <p>Add an extra layer of protection to your account in under a minute.</p>
-                    <a href="{{ url('client/profile') ?? url('/client/profile') }}" class="btn btn--outline-dark" style="font-size:0.78rem; padding:0.55rem 1rem;">Set up now</a>
+        <div class="db-card">
+            <div class="db-card__head"><h2>Your beneficiaries</h2></div>
+            <div style="display:flex; flex-direction:column; gap:0.8rem;">
+                <div class="client-card">
+                    <span class="avatar">JW</span>
+                    <div class="client-card__meta"><strong>James Whitfield</strong><span>NBB-GB-38712 &middot; GBP</span></div>
+                </div>
+                <div class="client-card">
+                    <span class="avatar">PN</span>
+                    <div class="client-card__meta"><strong>Priya Nair</strong><span>NBB-GB-39044 &middot; GBP</span></div>
                 </div>
             </div>
-
-            <div class="db-card">
-                <div class="db-card__head"><h2>Your beneficiaries</h2></div>
-                <div style="display:flex; flex-direction:column; gap:0.8rem;">
-                    <div class="client-card">
-                        <span class="avatar">JW</span>
-                        <div class="client-card__meta"><strong>James Whitfield</strong><span>NBB-GB-38712 &middot; GBP</span></div>
-                    </div>
-                    <div class="client-card">
-                        <span class="avatar">PN</span>
-                        <div class="client-card__meta"><strong>Priya Nair</strong><span>NBB-GB-39044 &middot; GBP</span></div>
-                    </div>
-                </div>
-                <a href="{{ url('client/beneficiaries') ?? url('/client/beneficiaries') }}" class="btn btn--ghost" style="margin-top:1rem;">Manage beneficiaries</a>
-            </div>
+            <a href="{{ url('client/beneficiaries') ?? url('/client/beneficiaries') }}" class="btn btn--ghost" style="margin-top:1rem;">Manage beneficiaries</a>
         </div>
     </div>
 

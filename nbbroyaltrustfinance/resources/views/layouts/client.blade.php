@@ -42,25 +42,25 @@
                 <div class="db-nav__area"><span>Client Area</span></div>
 
                 <span class="db-nav__label">Accounts</span>
-                <a href="{{ url('client/dashboard') ?? url('/client/dashboard') }}" @if(($activeNav ?? '') === 'overview') aria-current="page" @endif>
+                <a href="{{ url('/client/dashboard') ?? url('/client/dashboard') }}" @if(($activeNav ?? '') === 'overview') aria-current="page" @endif>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
                     Overview
                 </a>
-                <a href="{{ url('client/accounts') ?? url('/client/accounts') }}" @if(($activeNav ?? '') === 'accounts') aria-current="page" @endif>
+                <a href="{{ url('/client/accounts') ?? url('/client/accounts') }}" @if(($activeNav ?? '') === 'accounts') aria-current="page" @endif>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>
                     My Accounts
                 </a>
-                <a href="{{ url('client/statements') ?? url('/client/statements') }}" @if(($activeNav ?? '') === 'statements') aria-current="page" @endif>
+                <a href="{{ url('/client/statements') ?? url('/client/statements') }}" @if(($activeNav ?? '') === 'statements') aria-current="page" @endif>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l5 5v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M9 12h6M9 16h6"/></svg>
                     Statements
                 </a>
 
                 <span class="db-nav__label">Payments</span>
-                <a href="{{ url('client/transfers') ?? url('/client/transfers') }}" @if(($activeNav ?? '') === 'transfers') aria-current="page" @endif>
+                <a href="{{ url('/client/transfers') ?? url('/client/transfers') }}" @if(($activeNav ?? '') === 'transfers') aria-current="page" @endif>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
                     Send Money
                 </a>
-                <a href="{{ url('client/international-payments') ?? url('/client/international-payments') }}" @if(($activeNav ?? '') === 'international') aria-current="page" @endif>
+                <a href="{{ url('/client/international-payments') ?? url('/client/international-payments') }}" @if(($activeNav ?? '') === 'international') aria-current="page" @endif>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12h20M12 2c2.5 3 4 7 4 10s-1.5 7-4 10c-2.5-3-4-7-4-10s1.5-7 4-10z"/></svg>
                     International Payments
                 </a>
@@ -88,7 +88,7 @@
 
             <div class="db-sidebar__foot">
                 <strong>Signed in as</strong>
-                {{ $clientName ?? 'Amara Chukwu' }} &middot; NBB-GB-38820
+                {{ Auth::user()->name}} &middot; {{Auth::user()->userwallet->wallet_no}}
             </div>
         </aside>
 
@@ -121,8 +121,9 @@
                         <button class="db-profile__btn" id="db-profile-toggle" aria-expanded="false" aria-haspopup="true">
                             <span class="avatar">{{ $clientInitials ?? 'AC' }}</span>
                             <span class="db-profile__meta">
-                                <strong>{{ $clientName ?? 'Amara Chukwu' }}</strong>
-                                <span>Private Client</span>
+                                <strong>{{Auth::user()->name }}</strong>
+                                <span>{{Auth::user()->access_level}}</span>
+                                
                             </span>
                         </button>
                         <div class="dropdown-menu" id="db-profile-menu">
@@ -130,7 +131,7 @@
                             <a href="#"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg> Security</a>
                             <a href="{{ url('client/support') ?? url('/client/support') }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.7-2.5 2-2.5 3.5M12 17h.01"/></svg> Help Centre</a>
                             <hr>
-                            <a href="{{ url('/') }}" class="danger"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg> Sign Out</a>
+                            <a href="{{ url('/logout') }}" class="danger"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg> Sign Out</a>
                         </div>
                     </div>
                 </div>

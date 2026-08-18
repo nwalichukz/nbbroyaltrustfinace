@@ -15,7 +15,9 @@
                         <p>Sign in to manage your accounts, payments and statements.</p>
                     </div>
 
-                    <form action="{{ url('/login') }}" method="POST" novalidate>
+                    @include('partials/errors')
+
+                    <form action="{{ url('post-login') }}" method="POST" novalidate>
                         @csrf
 
                         <div class="form-field">

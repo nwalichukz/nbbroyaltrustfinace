@@ -15,7 +15,9 @@
                         <p>It takes about five minutes. A relationship manager will be in touch to complete verification.</p>
                     </div>
 
-                    <form action="{{ url('/register') }}" method="POST" novalidate>
+                    @include('partials.errors')
+
+                    <form action="{{ url('/create-user') }}" method="POST" novalidate>
                         @csrf
 
                         <div class="form-field">
@@ -29,9 +31,24 @@
                         </div>
 
                         <div class="form-field">
+                            <label for="reg-phone">Mobile number</label>
+                            <input type="tel" id="reg-phone" name="mobile_number" placeholder="+1 (555) 000-0000" autocomplete="tel" required>
+                        </div>
+
+                        <div class="form-field">
                             <label for="reg-password">Password</label>
                             <input type="password" id="reg-password" name="password" placeholder="At least 10 characters" autocomplete="new-password" minlength="10" required>
                             <span class="hint">Use a mix of letters, numbers and symbols for a stronger password.</span>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="reg-password-confirmation">Confirm password</label>
+                            <input type="password" id="reg-password-confirmation" name="password_confirmation" placeholder="Re-enter your password" autocomplete="new-password" minlength="10" required>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="reg-human">Confirm human</label>
+                            <input type="text" id="reg-human" name="confirm_human"  placeholder="Enter first 3 letters of the name you entered above eg: joh" required>
                         </div>
 
                         <div class="form-field">

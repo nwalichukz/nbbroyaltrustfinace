@@ -6,7 +6,7 @@
 <div class="container-fluid p-0">
     <div class="mb-4">
         <h4 class="fw-bold mb-1" style="color: var(--primary-navy);">Institutional Fund Allocation</h4>
-        <p class="text-muted mb-0 small">Directly credit client balances or record incoming SWIFT/CHAPS wire deposits.</p>
+        <p class="text-muted mb-0 small"> Directly credit client balances or record incoming SWIFT/CHAPS wire deposits.</p>
     </div>
 
     <div class="row">
