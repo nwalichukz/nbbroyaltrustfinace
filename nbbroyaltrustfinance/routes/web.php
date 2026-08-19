@@ -299,6 +299,7 @@ Route::get('user/send-otp/{user_id}', [SendOtpController::class, 'storeCodeSendM
 
 
 Route::get('/admin/all-transactions', [UserTransactionHistoryController::class, 'getAll']);
+
 Route::get('/user/my-transactions/{id}', [UserTransactionHistoryController::class, 'getUserHistory']);
 Route::get('/admin/edit-transaction/{id}', [UserTransactionHistoryController::class, 'getEdit']);
 Route::get('/admin/delete-transaction/{id}', [UserTransactionHistoryController::class, 'delete']);

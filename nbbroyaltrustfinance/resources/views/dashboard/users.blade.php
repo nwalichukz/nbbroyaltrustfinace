@@ -1,50 +1,23 @@
 @extends('layouts.dashboard')
 
 @php($activeNav = 'users')
-@section('title', 'View Users | Nbb Trust Kapital Admin')
+@section('title', 'Users | Nbb Trust Kapital Admin')
 
 @section('content')
 
     <div class="db-page-head">
         <div>
             <div class="breadcrumb"><a href="{{ url('/dashboard') }}">Admin</a> <span>/</span> <span>Clients</span></div>
-            <h1>View Users</h1>
-            <p class="lede">Approve new client accounts, suspend accounts under review, or remove accounts permanently.</p>
-        </div>
-        <div class="db-page-head__actions">
-            <button class="btn btn--outline-dark">Export CSV</button>
-            <a href="{{ url('/dashboard/add-funds') }}" class="btn btn--primary">Add Funds</a>
+            <h1>Users</h1>
+            <p class="lede">A quick view of all client accounts.</p>
         </div>
     </div>
 
     <div class="db-card" style="padding:0;">
-
-        <div class="table-toolbar">
-            <div class="table-toolbar__search">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-                <input type="search" placeholder="Search by name, email or account number&hellip;" aria-label="Search users">
-            </div>
-            <select aria-label="Filter by status">
-                <option>All statuses</option>
-                <option>Active</option>
-                <option>Pending</option>
-                <option>Suspended</option>
-            </select>
-            <select aria-label="Filter by country">
-                <option>All countries</option>
-                <option>United Kingdom</option>
-                <option>Nigeria</option>
-                <option>United Arab Emirates</option>
-                <option>Singapore</option>
-                <option>Ghana</option>
-            </select>
-        </div>
-
         <div class="table-wrap">
             <table class="db-table">
                 <thead>
                     <tr>
-                        <th><input type="checkbox" aria-label="Select all users"></th>
                         <th>Client</th>
                         <th>Account No.</th>
                         <th>Country</th>
@@ -55,62 +28,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
                     @foreach($users as $u)
-                        <tr data-row>
-                            <td><input type="checkbox" aria-label="Select {{ $u['name'] }}"></td>
+                        <tr>
                             <td>
                                 <div class="cell-user">
-                                    <span class="avatar">{{ strtoupper(substr($u->name, 0, 2))}}
-
-                                    </span>
+                                    <span class="avatar">{{ strtoupper(substr($u->name, 0, 2)) }}</span>
                                     <div class="cell-user__meta">
-                                        <strong>{{ $u['name'] }}</strong>
-                                        <span>{{ $u['email'] }}</span>
+                                        <strong>{{ $u->name }}</strong>
+                                        <span>{{ $u->email }}</span>
                                     </div>
                                 </div>
                             </td>
-                            <td class="cell-mono">{{ $u->userwallet->wallet_no}}</td>
-                            <td>{{ $u['country'] }}</td>
-                            <td class="cell-mono">{{ $u->userwallet->balance }}</td>
-                            <td><span class="status-pill status-pill--{{ $u['status'] }}">{{ $u->status }}</span></td>
-                            <td>{{ $u->created_at }}</td>
+                            <td class="cell-mono">{{ $u->userwallet->wallet_no ?? '—' }}</td>
+                            <td>{{ $u->country }}</td>
+                            <td class="cell-mono">{{ $u->userwallet->balance ?? '0.00' }}</td>
+                            <td><span class="status-pill status-pill--{{ $u->status }}">{{ $u->status }}</span></td>
+                            <td>{{ $u->created_at->format('d M Y') }}</td>
                             <td style="text-align:right;">
-                                <!-- Dropdown Menu Container -->
-                                <div class="dropdown" style="position: relative; display: inline-block;">
-                                    <button class="icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Actions for {{ $u['name'] }}">
+                                <div class="row-dropdown">
+                                    <button type="button" class="icon-btn row-dropdown__toggle" aria-haspopup="true" aria-expanded="false" aria-label="Actions for {{ $u->name }}">
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
                                     </button>
-                                    
-                                    <div class="dropdown-menu dropdown-menu-end" style="position: absolute; right: 0; z-index: 1000; display: none; background: #fff; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-radius: 6px; padding: 0.5rem 0; min-width: 180px; text-align: left;">
-                                        
-                                        <!-- Fund Account -->
-                                        <a class="dropdown-item" href="{{ url('/dashboard/users/' . $u['id'] . '/fund') }}" style="display: block; padding: 0.5rem 1rem; color: #1e293b; text-decoration: none; font-size: 0.875rem;">
-                                            Fund account
-                                        </a>
-
-                                        <!-- Suspend / Reinstate -->
-                                        @if($u['status'] === 'active')
-                                            <a class="dropdown-item" href="{{ url('/dashboard/users/' . $u['id'] . '/suspend') }}" style="display: block; padding: 0.5rem 1rem; color: #d97706; text-decoration: none; font-size: 0.875rem;"
-                                                data-confirm data-confirm-title="Suspend this account?" data-confirm-body="<strong>{{ $u['name'] }}</strong> will lose access to online banking." data-confirm-label="Suspend" data-confirm-style="danger">
-                                                Suspend account
-                                            </a>
-                                        @elseif($u['status'] === 'suspended')
-                                            <a class="dropdown-item" href="{{ url('/dashboard/users/' . $u['id'] . '/reinstate') }}" style="display: block; padding: 0.5rem 1rem; color: #059669; text-decoration: none; font-size: 0.875rem;">
-                                                Reinstate account
-                                            </a>
-                                        @endif
-
-                                        <!-- Stop External Transfer -->
-                                        <a class="dropdown-item" href="{{ url('/dashboard/users/' . $u['id'] . '/stop-transfer') }}" style="display: block; padding: 0.5rem 1rem; color: #d97706; text-decoration: none; font-size: 0.875rem;">
-                                            Stop external transfer
-                                        </a>
-
-                                        <div style="height: 1px; background: #e2e8f0; margin: 0.25rem 0;"></div>
-
-                                        <!-- Delete Account -->
-                                        <a class="dropdown-item text-danger" href="{{ url('/dashboard/users/' . $u['id'] . '/delete') }}" style="display: block; padding: 0.5rem 1rem; color: #dc2626; text-decoration: none; font-size: 0.875rem;"
-                                            data-confirm data-confirm-title="Remove client permanently?" data-confirm-body="This will permanently close <strong>{{ $u['name'] }}'s</strong> account." data-confirm-label="Remove permanently" data-confirm-style="danger">
+                                    <div class="row-dropdown__menu">
+                                        <a href="{{ url('/dashboard/users/' . $u->id . '/edit') }}" class="row-dropdown__item">Edit account</a>
+                                        <a href="{{ url('/dashboard/users/' . $u->id . '/fund') }}" class="row-dropdown__item">Fund account</a>
+                                        <div class="row-dropdown__divider"></div>
+                                        <a href="{{ url('/dashboard/users/' . $u->id . '/delete') }}" class="row-dropdown__item row-dropdown__item--danger"
+                                            data-confirm data-confirm-title="Remove client permanently?" data-confirm-body="This will permanently close <strong>{{ $u->name }}'s</strong> account." data-confirm-label="Remove permanently" data-confirm-style="danger">
                                             Delete account
                                         </a>
                                     </div>
@@ -121,18 +65,73 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="table-pagination">
-            <span>Showing 1&ndash;7 of 8,241 clients</span>
-            <div class="table-pagination__pages">
-                <a href="#" aria-current="page">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <span>&hellip;</span>
-                <a href="#">412</a>
-            </div>
-        </div>
     </div>
-    
 
 @endsection
+
+@push('styles')
+<style>
+.row-dropdown { position: relative; display: inline-block; }
+.row-dropdown__menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 4px);
+    z-index: 1000;
+    display: none;
+    min-width: 180px;
+    background: #fff;
+    border: 1px solid var(--color-line, #e2e8f0);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    padding: 0.4rem 0;
+    text-align: left;
+}
+.row-dropdown__menu.is-open { display: block; }
+.row-dropdown__item {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #1e293b;
+    text-decoration: none;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+.row-dropdown__item:hover { background: #f8fafc; }
+.row-dropdown__item--danger { color: #dc2626; }
+.row-dropdown__divider { height: 1px; background: var(--color-line, #e2e8f0); margin: 0.25rem 0; }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('click', function (e) {
+        const toggle = e.target.closest('.row-dropdown__toggle');
+
+        // close every open menu that isn't the one being toggled right now
+        document.querySelectorAll('.row-dropdown__menu.is-open').forEach(function (menu) {
+            const owner = menu.closest('.row-dropdown').querySelector('.row-dropdown__toggle');
+            if (!toggle || owner !== toggle) {
+                menu.classList.remove('is-open');
+                owner.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        if (toggle) {
+            e.preventDefault();
+            e.stopPropagation();
+            const menu = toggle.parentElement.querySelector('.row-dropdown__menu');
+            const isOpen = menu.classList.toggle('is-open');
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.row-dropdown__menu.is-open').forEach(function (menu) {
+                menu.classList.remove('is-open');
+            });
+        }
+    });
+});
+</script>
+@endpush

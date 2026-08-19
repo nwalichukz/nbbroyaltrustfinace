@@ -7,13 +7,13 @@
 
     <div class="db-page-head">
         <div>
-            <div class="breadcrumb"><a href="{{ url('/dashboard') }}">Admin</a> <span>/</span> <span>Overview</span></div>
-            <h1>Good afternoon, {{ $adminName ?? 'Amaka' }}</h1>
+            <div class="breadcrumb"><a href="{{ url('/dashboard') }}">{{Auth::user()->access_level}}</a> <span>/</span> <span>Overview</span></div>
+            <h1>Good day, {{ Auth::user()->name }}</h1>
             <p class="lede">Here's what's happening across Nbb Trust Kapital client accounts today.</p>
         </div>
         <div class="db-page-head__actions">
-            <a href="{{ url('dashboard.add-funds') ?? url('/dashboard/add-funds') }}" class="btn btn--outline-dark">Add Funds</a>
-            <a href="{{ url('dashboard.users') ?? url('/dashboard/users') }}" class="btn btn--primary">Review Pending Users</a>
+            <a href="{{ url('#') }}" class="btn btn--outline-dark">Add Funds</a>
+            <a href="{{ url('dashboard/users') ?? url('/dashboard/users') }}" class="btn btn--primary">Review Pending Users</a>
         </div>
     </div>
 

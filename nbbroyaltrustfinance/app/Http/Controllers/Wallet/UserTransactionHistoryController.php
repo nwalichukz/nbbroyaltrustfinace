@@ -80,12 +80,12 @@ class UserTransactionHistoryController extends Controller
        if(Auth::check()){
         if(Auth::user()->access_level == 'admin'){
      $data = UserTransactionHistory::where('id', '!=', null)->with(['user'])->orderBy('created_at', 'DESC')->paginate(20);
-     return view('dashboard/src/html/all-transactions')->with(['transactions'=>$data, 'title'=>'All Transactions']);
+     return view('admin/all-transactions')->with(['transactions'=>$data, 'title'=>'All Transactions']);
         }else{
-          return redirect('/get-login');
+          return redirect('/login');
         }
        }else{
-        return redirect('/get-login');
+        return redirect('/login');
       }
      }
 

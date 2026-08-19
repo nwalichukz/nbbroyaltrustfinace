@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{ asset('nbb/css/dashboard.css') }}">
     @stack('styles')
 </head>
-<body class="db-body notranslate" translate="no">
+<body class="db-body">
 
     <a href="#db-main-content" class="skip-link">Skip to main content</a>
 

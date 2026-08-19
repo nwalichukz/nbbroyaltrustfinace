@@ -33,22 +33,37 @@
         </div>
     </div>
 
-    {{-- ---------- Quick actions ---------- --}}
+    {{-- ---------- Quick actions with Custom Icons ---------- --}}
     <div class="quick-actions">
+        {{-- Send Money --}}
         <a href="{{ url('client.transfers') ?? url('/client/transfers') }}" class="quick-action">
-            <span class="quick-action__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h16M14 6l6 6-6 6"/></svg></span>
+            <span class="quick-action__icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </span>
             <span>Send Money</span>
         </a>
+
+        {{-- Add Money --}}
         <a href="{{ url('client.accounts') ?? url('/client/accounts') }}" class="quick-action">
-            <span class="quick-action__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span>
+            <span class="quick-action__icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+            </span>
             <span>Add Money</span>
         </a>
+
+        {{-- Request Statement --}}
         <a href="{{ url('client.statements') ?? url('/client/statements') }}" class="quick-action">
-            <span class="quick-action__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l5 5v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M9 12h6M9 16h6"/></svg></span>
+            <span class="quick-action__icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            </span>
             <span>Request Statement</span>
         </a>
+
+        {{-- Pay Abroad --}}
         <a href="{{ url('client/international-payments') ?? url('/client/international-payments') }}" class="quick-action">
-            <span class="quick-action__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12h20M12 2c2.5 3 4 7 4 10s-1.5 7-4 10c-2.5-3-4-7-4-10s1.5-7 4-10z"/></svg></span>
+            <span class="quick-action__icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            </span>
             <span>Pay Abroad</span>
         </a>
     </div>

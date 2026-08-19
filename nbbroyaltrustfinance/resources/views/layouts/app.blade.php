@@ -29,9 +29,41 @@
 
     {{-- Styles --}}
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    <style>
+        /* Google Translate: the actual gadget is rendered off-screen — we never
+           show Google's own dropdown, because relying on its internal onchange
+           firing is exactly what was breaking ("shows but click does nothing":
+           ad blockers, CSP, and cookie-domain quirks on dev/localhost all break
+           it silently). Our own <select> below drives translation instead by
+           setting the googtrans cookie directly and reloading — deterministic,
+           doesn't depend on Google's click wiring at all. */
+        #google_translate_element { position: absolute; left: -9999px; top: -9999px; }
+        .goog-te-banner-frame { z-index: 2002 !important; }
+        body { top: 0 !important; } /* stop Google pushing the page down when its banner appears */
+        #goog-gt-tt, .goog-te-balloon-frame { display: none !important; } /* kill hover-translate tooltip */
+
+        .lang-switcher {
+            appearance: none;
+            -webkit-appearance: none;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.35);
+            color: inherit;
+            font: inherit;
+            font-size: 0.75rem;
+            padding: 0.25rem 1.5rem 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 0.4rem center;
+        }
+        .lang-switcher option { color: #0B2545; }
+    </style>
+
     @stack('styles')
 </head>
-<body class="notranslate" translate="no">
+<body>
 
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -51,7 +83,33 @@
                 <a href="{{ url('/login') }}">Client Login</a>
                 <span class="topbar__divider" aria-hidden="true"></span>
 
-                @include('partials.language-switcher')
+                {{-- Custom language switcher — drives Google Translate via cookie,
+                     not via clicking Google's own gadget. See doGTranslate() below. --}}
+                <select id="lang-switcher" class="lang-switcher" aria-label="Select language" onchange="doGTranslate(this.value)">
+                    <option value="">Language</option>
+                    <option value="en">English</option>
+                    <option value="fr">Fran&ccedil;ais</option>
+                    <option value="es">Espa&ntilde;ol</option>
+                    <option value="pt">Portugu&ecirc;s</option>
+                    <option value="ar">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</option>
+                    <option value="zh-CN">&#20013;&#25991;</option>
+                    <option value="de">Deutsch</option>
+                    <option value="ha">Hausa</option>
+                    <option value="ig">Igbo</option>
+                    <option value="yo">Yor&ugrave;b&aacute;</option>
+                    <option value="it">Italiano</option>
+                    <option value="ru">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</option>
+                    <option value="hi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;</option>
+                    <option value="ja">&#26085;&#26412;&#35486;</option>
+                    <option value="ko">&#54620;&#44397;&#50612;</option>
+                    <option value="sw">Kiswahili</option>
+                    <option value="tr">T&uuml;rk&ccedil;e</option>
+                    <option value="nl">Nederlands</option>
+                    <option value="pcm">Naija (Pidgin)</option>
+                    <option value="ff">Fulfulde</option>
+                    <option value="kr">Kanuri</option>
+                </select>
+                <div id="google_translate_element"></div>
             </div>
         </div>
     </div>
@@ -201,6 +259,52 @@
     </button>
 
     <script src="{{ asset('js/app.js') }}" defer></script>
+
+    {{-- =========================================================
+         Google Website Translator
+         Defined once, here, for the whole layout. Translation is
+         driven by setting the googtrans cookie + reload (doGTranslate),
+         NOT by clicking Google's own gadget — that's the fix.
+         ========================================================= --}}
+    <script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,fr,es,pt,ar,zh-CN,de,ha,ig,yo,it,ru,hi,ja,ko,sw,tr,nl,pcm,ff,kr',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+        }, 'google_translate_element');
+
+        // Reflect the active language (from cookie) back into our custom
+        // select on load, so it doesn't silently reset to "Language" after
+        // a reload.
+        var match = document.cookie.match(/googtrans=\/en\/([a-zA-Z-]+)/);
+        if (match && document.getElementById('lang-switcher')) {
+            document.getElementById('lang-switcher').value = match[1];
+        }
+    }
+
+    function doGTranslate(lang) {
+        if (!lang) return;
+
+        if (lang === 'en') {
+            // Clear translation: wipe cookie on every path Google may have set it on.
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname + ';';
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + window.location.hostname + ';';
+            window.location.reload();
+            return;
+        }
+
+        var value = '/en/' + lang;
+        document.cookie = 'googtrans=' + value + '; path=/;';
+        document.cookie = 'googtrans=' + value + '; path=/; domain=' + window.location.hostname + ';';
+        document.cookie = 'googtrans=' + value + '; path=/; domain=.' + window.location.hostname + ';';
+        window.location.reload();
+    }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
     @stack('scripts')
 </body>
 </html>

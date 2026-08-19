@@ -17,6 +17,20 @@
     what the Google widget listens for. If the hidden select isn't ready yet
     (the external script can take a moment to load), we retry briefly instead
     of failing silently.
+
+    PERSISTENCE FIX (this is the part that was actually broken):
+    This dashboard is a normal multi-page Laravel app — every sidebar link is
+    a full page load, not an SPA route. The select-and-dispatch trick above
+    only affects the CURRENT page; it has no memory. So a user could pick
+    "French" on Overview, click "My Accounts," and land back on English with
+    no indication anything failed. Google's widget itself reads a "googtrans"
+    cookie on init and auto-translates to whatever language it names — so we
+    write that cookie (and mirror the choice in localStorage, purely to
+    restore the visible button label instantly on load, before Google's
+    script has even downloaded). The cookie is set synchronously, at the top
+    of this script, before the async Google <script> tag below it starts
+    loading — so translation is already decided by the time that script runs
+    on every subsequent page.
 --}}
 <div class="lang-switcher" id="lang-switcher">
     <button type="button" class="lang-switcher__btn" id="lang-switcher-btn" aria-haspopup="true" aria-expanded="false">
@@ -145,6 +159,34 @@
 (function () {
     'use strict';
 
+    var COOKIE_NAME = 'googtrans';
+    var STORAGE_KEY = 'nbb_lang';
+
+    // --- cookie helpers -----------------------------------------------
+    function setCookie(value) {
+        var expires = 'expires=Fri, 31 Dec 9999 23:59:59 GMT';
+        // Host-only cookie, no explicit domain — safest across environments
+        // (a wrong/mismatched domain attribute is a classic reason this
+        // silently fails). Set on both "/" and current path for reliability.
+        document.cookie = COOKIE_NAME + '=' + value + '; path=/; ' + expires;
+    }
+    function clearCookie() {
+        document.cookie = COOKIE_NAME + '=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    }
+
+    // --- restore choice BEFORE Google's script runs --------------------
+    // This must happen synchronously, at the top of the file, so the
+    // googtrans cookie is already in place before the async Google
+    // <script> tag below starts executing on this and every future page.
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch (e) { saved = null; }
+
+    if (saved && saved.code && saved.code !== 'en') {
+        setCookie('/en/' + saved.code);
+    } else {
+        clearCookie();
+    }
+
     // Called by Google's own script once it loads (see the src tag below).
     window.googleTranslateElementInit = function () {
         new google.translate.TranslateElement(
@@ -195,6 +237,17 @@
         var menu = document.getElementById('lang-switcher-menu');
         if (!wrap || !btn || !menu) return;
 
+        // Reflect the previously-saved language in the button label right
+        // away, without waiting on Google's script — so the UI is honest
+        // about the current state from the first paint.
+        if (saved && saved.code && saved.code !== 'en') {
+            var label = document.getElementById('lang-switcher-current');
+            if (label) label.textContent = saved.label;
+            menu.querySelectorAll('button[aria-current]').forEach(function (b) { b.removeAttribute('aria-current'); });
+            var active = menu.querySelector('button[data-lang="' + saved.code + '"]');
+            if (active) active.setAttribute('aria-current', 'true');
+        }
+
         btn.addEventListener('click', function (e) {
             e.stopPropagation();
             var open = menu.classList.toggle('is-open');
@@ -219,7 +272,19 @@
         menu.querySelectorAll('button[data-lang]').forEach(function (item) {
             item.addEventListener('click', function (e) {
                 e.stopPropagation();
-                applyLanguage(item.getAttribute('data-lang'), item.getAttribute('data-label'));
+                var code = item.getAttribute('data-lang');
+                var label = item.getAttribute('data-label');
+
+                // Persist the choice so it survives the next full page load.
+                if (code === 'en') {
+                    clearCookie();
+                    try { localStorage.removeItem(STORAGE_KEY); } catch (err) {}
+                } else {
+                    setCookie('/en/' + code);
+                    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ code: code, label: label })); } catch (err) {}
+                }
+
+                applyLanguage(code, label);
                 menu.classList.remove('is-open');
                 wrap.classList.remove('is-open');
                 btn.setAttribute('aria-expanded', 'false');
