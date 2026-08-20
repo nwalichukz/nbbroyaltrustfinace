@@ -49,14 +49,14 @@
                                 <strong>{{ $tx->user->name ?? 'N/A' }}</strong>
                                 <br><span style="font-size: 0.75rem; color: var(--color-muted);">{{ $tx->user->email ?? '' }}</span>
                             </td>
-                            <td>{!! $tx->description ?? 'Transfer' !!}</td>
-                            <td class="cell-mono">{{ $tx->reference ?? 'NBB-TX-00000' }}</td>
+                            <td>{!! $tx->purpose ?? 'Transfer' !!}</td>
+                            <td class="cell-mono">NBB-TX-{{ $tx->id ?? 'NBB-TX-00000' }}</td>
                             <td class="cell-mono" style="font-weight: 600;">
                                 {{ $tx->amount ?? '$0.00' }}
                             </td>
                             <td>
                                 <span class="status-pill status-pill--{{ $tx->status ?? 'active' }}">
-                                    {{ ucfirst($tx->status_label ?? 'Completed') }}
+                                    {{ ucfirst($tx->status ?? 'Completed') }}
                                 </span>
                             </td>
                             <td>{{ $tx->created_at ? $tx->created_at->format('d M Y, H:i') : '13 Aug 2026' }}</td>

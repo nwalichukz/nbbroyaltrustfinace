@@ -32,7 +32,11 @@
                         <tr>
                             <td>
                                 <div class="cell-user">
-                                    <span class="avatar">{{ strtoupper(substr($u->name, 0, 2)) }}</span>
+                                    @if(!empty($u->avatar))
+                                        <img src="{{ asset('images/avatar/'.$u->avatar) }}" alt="{{ $u->name }}" class="avatar" style="object-fit: cover;">
+                                    @else
+                                        <span class="avatar">{{ strtoupper(substr($u->name, 0, 2)) }}</span>
+                                    @endif
                                     <div class="cell-user__meta">
                                         <strong>{{ $u->name }}</strong>
                                         <span>{{ $u->email }}</span>
@@ -51,7 +55,9 @@
                                     </button>
                                     <div class="row-dropdown__menu">
                                         <a href="{{ url('/dashboard/users/' . $u->id . '/edit') }}" class="row-dropdown__item">Edit account</a>
-                                        <a href="{{ url('/dashboard/users/' . $u->id . '/fund') }}" class="row-dropdown__item">Fund account</a>
+                                        <a href="{{ url('/admin/update-img/'.$u->id) }}" class="row-dropdown__item">Edit Image</a>
+                                        <a href="{{ url('/dashboard/users/' . $u->id . '/edit') }}" class="row-dropdown__item">Stop External transfer</a>
+                                        <a href="{{ url('/admin/fund-user/' . $u->id) }}" class="row-dropdown__item">Fund account</a>
                                         <div class="row-dropdown__divider"></div>
                                         <a href="{{ url('/dashboard/users/' . $u->id . '/delete') }}" class="row-dropdown__item row-dropdown__item--danger"
                                             data-confirm data-confirm-title="Remove client permanently?" data-confirm-body="This will permanently close <strong>{{ $u->name }}'s</strong> account." data-confirm-label="Remove permanently" data-confirm-style="danger">
@@ -98,6 +104,12 @@
 .row-dropdown__item:hover { background: #f8fafc; }
 .row-dropdown__item--danger { color: #dc2626; }
 .row-dropdown__divider { height: 1px; background: var(--color-line, #e2e8f0); margin: 0.25rem 0; }
+.cell-user img.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 </style>
 @endpush
 

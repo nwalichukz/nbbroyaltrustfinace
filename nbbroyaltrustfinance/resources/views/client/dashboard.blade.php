@@ -36,36 +36,36 @@
     {{-- ---------- Quick actions with Custom Icons ---------- --}}
     <div class="quick-actions">
         {{-- Send Money --}}
-        <a href="{{ url('client.transfers') ?? url('/client/transfers') }}" class="quick-action">
+        {{--<a href="{{ url('client.transfers') ?? url('/client/transfers') }}" class="quick-action">
             <span class="quick-action__icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
             </span>
             <span>Send Money</span>
-        </a>
+        </a>--}}
 
         {{-- Add Money --}}
-        <a href="{{ url('client.accounts') ?? url('/client/accounts') }}" class="quick-action">
+        {{--<a href="{{ url('client.accounts') ?? url('/client/accounts') }}" class="quick-action">
             <span class="quick-action__icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
             </span>
             <span>Add Money</span>
-        </a>
+        </a>--}}
 
         {{-- Request Statement --}}
-        <a href="{{ url('client.statements') ?? url('/client/statements') }}" class="quick-action">
+        {{--<a href="{{ url('client.statements') ?? url('/client/statements') }}" class="quick-action">
             <span class="quick-action__icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
             </span>
             <span>Request Statement</span>
-        </a>
+        </a>--}}
 
         {{-- Pay Abroad --}}
-        <a href="{{ url('client/international-payments') ?? url('/client/international-payments') }}" class="quick-action">
+        {{--<a href="{{ url('client/international-payments') ?? url('/client/international-payments') }}" class="quick-action">
             <span class="quick-action__icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
             </span>
             <span>Pay Abroad</span>
-        </a>
+        </a>--}}
     </div>
 
     {{-- ---------- Security nudge & Beneficiaries ---------- --}}
@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        <div class="db-card">
+        {{--<div class="db-card">
             <div class="db-card__head"><h2>Your beneficiaries</h2></div>
             <div style="display:flex; flex-direction:column; gap:0.8rem;">
                 <div class="client-card">
@@ -92,7 +92,7 @@
                 </div>
             </div>
             <a href="{{ url('client/beneficiaries') ?? url('/client/beneficiaries') }}" class="btn btn--ghost" style="margin-top:1rem;">Manage beneficiaries</a>
-        </div>
+        </div>--}}
     </div>
 
     {{-- ---------- Recent transactions ---------- --}}
@@ -123,13 +123,12 @@
                         ['desc' => 'International transfer to Singapore', 'ref' => 'NBB-TX-88176', 'amount' => '-£860.00', 'status' => 'pending', 'label' => 'Processing', 'date' => '10 Aug 2026'],
                         ['desc' => 'Card payment &mdash; Utility bill', 'ref' => 'NBB-TX-88150', 'amount' => '-£142.30', 'status' => 'active', 'label' => 'Completed', 'date' => '08 Aug 2026'],
                     ])
-                    @foreach($rows as $row)
-                        <tr>
-                            <td>{!! $row['desc'] !!}</td>
-                            <td class="cell-mono">{{ $row['ref'] }}</td>
+                   @foreach(Auth::user()->transactionHistory as $row)                        <tr>
+                            <td>{!! $row['purpose'] !!}</td>
+                            <td class="cell-mono">NBB-TX-{{ $row['id'] }}</td>
                             <td class="cell-mono">{{ $row['amount'] }}</td>
-                            <td><span class="status-pill status-pill--{{ $row['status'] }}">{{ $row['label'] }}</span></td>
-                            <td>{{ $row['date'] }}</td>
+                            <td><span class="status-pill status-pill--{{ $row['status'] }}">{{ $row['status']?? 'Completed' }}</span></td>
+                            <td>{{ $row->created_at->format('d M, Y') }}</td>
                         </tr>
                     @endforeach
                 </tbody>

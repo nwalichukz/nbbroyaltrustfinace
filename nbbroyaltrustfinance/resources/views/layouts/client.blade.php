@@ -13,6 +13,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Public+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('nbb/css/dashboard.css') }}">
+
+    <style>
+        /* Google Translate: gadget hidden off-screen, our own select drives it
+           via cookie + reload (doGTranslate below) — see layouts.dashboard for
+           the same fix, applied here for the Client Area console too. */
+        #google_translate_element { position: absolute; left: -9999px; top: -9999px; }
+        .goog-te-banner-frame { z-index: 2002 !important; }
+        body { top: 0 !important; }
+        #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+
+        .lang-switcher {
+            appearance: none;
+            -webkit-appearance: none;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.35);
+            color: inherit;
+            font: inherit;
+            font-size: 0.75rem;
+            padding: 0.25rem 1.5rem 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 0.4rem center;
+        }
+        .lang-switcher option { color: #081C33; }
+    </style>
+
     @stack('styles')
 </head>
 <body class="db-body">
@@ -108,7 +136,31 @@
                 </div>
 
                 <div class="db-topbar__right">
-                    @include('partials.language-switcher')
+                    <select id="lang-switcher" class="lang-switcher" aria-label="Select language" onchange="doGTranslate(this.value)">
+                        <option value="">Language</option>
+                        <option value="en">English</option>
+                        <option value="fr">Fran&ccedil;ais</option>
+                        <option value="es">Espa&ntilde;ol</option>
+                        <option value="pt">Portugu&ecirc;s</option>
+                        <option value="ar">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</option>
+                        <option value="zh-CN">&#20013;&#25991;</option>
+                        <option value="de">Deutsch</option>
+                        <option value="ha">Hausa</option>
+                        <option value="ig">Igbo</option>
+                        <option value="yo">Yor&ugrave;b&aacute;</option>
+                        <option value="it">Italiano</option>
+                        <option value="ru">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</option>
+                        <option value="hi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;</option>
+                        <option value="ja">&#26085;&#26412;&#35486;</option>
+                        <option value="ko">&#54620;&#44397;&#50612;</option>
+                        <option value="sw">Kiswahili</option>
+                        <option value="tr">T&uuml;rk&ccedil;e</option>
+                        <option value="nl">Nederlands</option>
+                        <option value="pcm">Naija (Pidgin)</option>
+                        <option value="ff">Fulfulde</option>
+                        <option value="kr">Kanuri</option>
+                    </select>
+                    <div id="google_translate_element"></div>
 
                     <span class="db-topbar__divider" aria-hidden="true"></span>
 
@@ -161,6 +213,42 @@
 
     <script src="{{ asset('nbb/js/app.js') }}" defer></script>
     <script src="{{ asset('nbb/js/dashboard.js') }}" defer></script>
+
+    <script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,fr,es,pt,ar,zh-CN,de,ha,ig,yo,it,ru,hi,ja,ko,sw,tr,nl,pcm,ff,kr',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+        }, 'google_translate_element');
+
+        var match = document.cookie.match(/googtrans=\/en\/([a-zA-Z-]+)/);
+        if (match && document.getElementById('lang-switcher')) {
+            document.getElementById('lang-switcher').value = match[1];
+        }
+    }
+
+    function doGTranslate(lang) {
+        if (!lang) return;
+
+        if (lang === 'en') {
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname + ';';
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.' + window.location.hostname + ';';
+            window.location.reload();
+            return;
+        }
+
+        var value = '/en/' + lang;
+        document.cookie = 'googtrans=' + value + '; path=/;';
+        document.cookie = 'googtrans=' + value + '; path=/; domain=' + window.location.hostname + ';';
+        document.cookie = 'googtrans=' + value + '; path=/; domain=.' + window.location.hostname + ';';
+        window.location.reload();
+    }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
     @stack('scripts')
 </body>
 </html>

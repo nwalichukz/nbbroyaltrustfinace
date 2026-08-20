@@ -90,16 +90,16 @@ class ImageController extends Controller
      * returns the image file
      * 
      */
-    public static function uploadAvatar(){
-        if($request->hasFile('doc_image')){
+    public static function uploadAvatar($request){
+        if($request->hasFile('avatar')){
 
-            $doc_img = $request->file('doc_image');
+            $doc_img = $request->file('avatar');
             $filename = time() . '.' . $doc_img->getClientOriginalExtension();
-            $image = Image::read($doc_img);
+            $image = Image::make($doc_img);
             // Resize image
             $image->resize(400, 300, function ($constraint) {
                 $constraint->aspectRatio();
-            })->save(public_path('images/kyc/' . $filename));
+            })->save(public_path('images/avatar/'.$filename));
             return $filename;
             }
 

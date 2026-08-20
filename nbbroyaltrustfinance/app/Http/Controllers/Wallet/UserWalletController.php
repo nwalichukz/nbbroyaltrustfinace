@@ -95,15 +95,10 @@ class UserWalletController extends Controller
            // return $credit;
             // Mailer::creditMail($credit->user->email, $request['amount'], $credit->balance);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => $request['amount'].' credited to your wallet successfully',
-            ]);
+            return redirect('/admin/all-users')->with
+                ('success', $request['amount'].' credited to your wallet successfully');
         }else{
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Something went wrong, your wallet could not be credited. Please try again',
-            ]);
+            return redirect()->back()->with('success', 'Something went wrong, your wallet could not be credited. Please try again');
         }
     }
 
@@ -701,16 +696,21 @@ class UserWalletController extends Controller
      * cash out
      *
      */
-    public static function getFundAccount(){
-       if(Auth::check()){
-        return view('dashboard/src/html/components/forms/add-fund');
-
-       }else{
+public static function getFundAccount($id)
+{
+    if (! Auth::check() || Auth::user()->access_level !== 'admin') {
         Auth::logout();
-        return redirect('/logout');
-       }
-
+        return redirect('/login')->with('error', 'You are not authorized to view this page.');
     }
+
+    $user = User::find($id);
+
+    if (! $user) {
+        abort(404);
+    }
+
+    return view('dashboard.add-funds', compact('user'));
+}
 
      /**
      *

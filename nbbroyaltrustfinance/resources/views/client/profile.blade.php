@@ -38,22 +38,19 @@
                     <div class="form-row">
                         <div class="form-group col-half">
                             <label for="first_name" class="form-label">First Name</label>
-                            <input type="text" id="first_name" name="first_name" class="form-control" value="{{ $clientFirstName ?? 'Amara' }}" required>
+                            <input type="text" id="first_name" name="first_name" class="form-control" value="{{ Auth::user()->name }}" required>
                         </div>
-                        <div class="form-group col-half">
-                            <label for="last_name" class="form-label">Last Name</label>
-                            <input type="text" id="last_name" name="last_name" class="form-control" value="{{ $clientLastName ?? 'Chukwu' }}" required>
-                        </div>
+                       
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col-half">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" id="email" name="email" class="form-control" value="{{ $clientEmail ?? 'amara.chukwu@example.com' }}" required>
+                            <input type="email" id="email" name="email" class="form-control" value="{{ Auth::user()->email}}" required>
                         </div>
                         <div class="form-group col-half">
                             <label for="phone" class="form-label">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" class="form-control" value="{{ $clientPhone ?? '+44 7700 900077' }}" required>
+                            <input type="tel" id="phone" name="phone" class="form-control" value="{{ Auth::user()->mobile_numner }}" required>
                         </div>
                     </div>
 
@@ -111,9 +108,15 @@
             <!-- Profile Summary Badge -->
             <div class="db-card user-badge-card">
                 <div class="user-avatar-large">
-                    <span>{{ $clientInitials ?? 'AC' }}</span>
+                    <span>@if(!empty(Auth::user()->avatar))
+                                        <img src="{{ asset('images/avatar/'.Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" class="avatar" style="object-fit: cover;">
+                                    @else
+                                      {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+                                    @endif
+
+                    </span>
                 </div>
-                <h3>{{ $clientName ?? 'Amara Chukwu' }}</h3>
+                <h3>{{ Auth::user()->name}}</h3>
                 <span class="user-tag">Private Client</span>
 
                 <div class="meta-divider"></div>
@@ -121,7 +124,7 @@
                 <div class="meta-list">
                     <div class="meta-item">
                         <span class="meta-label">Client ID</span>
-                        <span class="meta-value">NBB-GB-38820</span>
+                        <span class="meta-value">NBB-GB-{{Auth::user()->userwallet->wallet_no}}</span>
                     </div>
                     <div class="meta-item">
                         <span class="meta-label">Account Tier</span>

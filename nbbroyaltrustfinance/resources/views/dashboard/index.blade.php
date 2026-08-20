@@ -13,7 +13,7 @@
         </div>
         <div class="db-page-head__actions">
             <a href="{{ url('#') }}" class="btn btn--outline-dark">Add Funds</a>
-            <a href="{{ url('dashboard/users') ?? url('/dashboard/users') }}" class="btn btn--primary">Review Pending Users</a>
+            <a href="#" class="btn btn--primary">Review Pending Users</a>
         </div>
     </div>
 
@@ -22,50 +22,50 @@
         <div class="stat-card">
             <div class="stat-card__top">
                 <span class="stat-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="18" cy="8" r="2.6"/><path d="M15.5 14.2c2.6.4 4.5 2.6 4.5 5.3"/></svg></span>
-                <span class="stat-card__trend up">+4.2%</span>
+                <span class="stat-card__trend up"> </span>
             </div>
-            <div class="stat-card__value">8,241</div>
+            <div class="stat-card__value">{{$userCount}}</div>
             <div class="stat-card__label">Total clients</div>
         </div>
 
         <div class="stat-card">
             <div class="stat-card__top">
                 <span class="stat-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg></span>
-                <span class="stat-card__trend up">+1.8%</span>
+                <span class="stat-card__trend up"> </span>
             </div>
-            <div class="stat-card__value">£48.6M</div>
+            <div class="stat-card__value">{{$totalWallet}}</div>
             <div class="stat-card__label">Total client balances</div>
         </div>
 
-        <div class="stat-card">
+        {{--<div class="stat-card">
             <div class="stat-card__top">
                 <span class="stat-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
                 <span class="stat-card__trend down">Needs review</span>
             </div>
             <div class="stat-card__value">17</div>
             <div class="stat-card__label">Pending approvals</div>
-        </div>
+        </div>--}}
 
-        <div class="stat-card">
+        {{--<div class="stat-card">
             <div class="stat-card__top">
                 <span class="stat-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg></span>
                 <span class="stat-card__trend down">3 flagged</span>
             </div>
             <div class="stat-card__value">6</div>
             <div class="stat-card__label">Suspended accounts</div>
-        </div>
+        </div>--}}
     </div>
 
     <div class="db-form-grid db-form-grid--split">
         {{-- ---------- Funding activity chart ---------- --}}
-        <div class="db-card">
+        {{--<div class="db-card">
             <div class="db-card__head">
                 <div>
                     <span class="u-eyebrow">Last 7 days</span>
                     <h2 style="margin-top:0.4rem;">Funds added vs. withdrawn</h2>
                 </div>
-            </div>
-            <div class="bar-chart" role="img" aria-label="Bar chart of funds added versus withdrawn over the last seven days">
+            </div>--}}
+            {{--<div class="bar-chart" role="img" aria-label="Bar chart of funds added versus withdrawn over the last seven days">
                 @php($days = ['Mon' => [62,38], 'Tue' => [74,41], 'Wed' => [58,52], 'Thu' => [88,34], 'Fri' => [96,60], 'Sat' => [40,20], 'Sun' => [33,18]])
                 @foreach($days as $day => $vals)
                     <div class="bar-chart__col">
@@ -77,10 +77,10 @@
                     </div>
                 @endforeach
             </div>
-        </div>
+        </div>--}}
 
         {{-- ---------- Pending approvals widget ---------- --}}
-        <div class="db-card">
+        {{--<div class="db-card">
             <div class="db-card__head">
                 <div>
                     <span class="u-eyebrow">Action needed</span>
@@ -112,7 +112,7 @@
                 @endforeach
             </div>
             <a href="{{ url('dashboard.users') ?? url('/dashboard/users') }}" class="btn btn--ghost" style="margin-top:1.1rem;">View all pending clients</a>
-        </div>
+        </div>--}}
     </div>
 
     {{-- ---------- Recent transactions ---------- --}}
@@ -120,7 +120,7 @@
         <div class="db-card__head">
             <div>
                 <span class="u-eyebrow">Latest activity</span>
-                <h2 style="margin-top:0.4rem;">Recent transactions</h2>
+                <h2 style="margin-top:0.4rem;">Recent Transactions</h2>
             </div>
             <a href="#" class="btn btn--ghost">View all</a>
         </div>
@@ -144,19 +144,19 @@
                         ['name' => 'Priya Nair', 'initials' => 'PN', 'ref' => 'NBB-TX-88198', 'type' => 'Funds added', 'amount' => '+£860.00', 'status' => 'active', 'label' => 'Completed', 'date' => '12 Aug 2026'],
                         ['name' => 'Olumide Bakare', 'initials' => 'OB', 'ref' => 'NBB-TX-88184', 'type' => 'Withdrawal', 'amount' => '-£5,000.00', 'status' => 'suspended', 'label' => 'Flagged', 'date' => '12 Aug 2026'],
                     ])
-                    @foreach($rows as $row)
+                    @foreach($transactions as $row)
                         <tr>
                             <td>
                                 <div class="cell-user">
-                                    <span class="avatar">{{ $row['initials'] }}</span>
-                                    <div class="cell-user__meta"><strong>{{ $row['name'] }}</strong></div>
+                                    <span class="avatar">{{ strtoupper(substr($row->user->name, 0, 2)) }}</span>
+                                    <div class="cell-user__meta"><strong>{{ $row->user->name }}</strong></div>
                                 </div>
                             </td>
-                            <td class="cell-mono">{{ $row['ref'] }}</td>
-                            <td>{{ $row['type'] }}</td>
+                            <td class="cell-mono">NBB-TX-{{ $row['id'] }}</td>
+                            <td>{{ $row['transaction_type'] }}</td>
                             <td class="cell-mono">{{ $row['amount'] }}</td>
-                            <td><span class="status-pill status-pill--{{ $row['status'] }}">{{ $row['label'] }}</span></td>
-                            <td>{{ $row['date'] }}</td>
+                            <td><span class="status-pill status-pill--{{ $row['status'] }}">{{ $row['status'] }}</span></td>
+                            <td>{{ $row->created_at->format('d M Y') }}</td>
                         </tr>
                     @endforeach
                 </tbody>

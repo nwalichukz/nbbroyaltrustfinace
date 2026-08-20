@@ -44,7 +44,7 @@
                     <div class="vcard-bottom">
                         <div class="vcard-holder">
                             <span class="vcard-label">CARDHOLDER</span>
-                            <span class="vcard-val">CHUKWUEBUKA ASOGWA</span>
+                            <span class="vcard-val">{{Auth::user()->name}}</span>
                         </div>
                         <div class="vcard-expiry">
                             <span class="vcard-label">EXPIRES</span>

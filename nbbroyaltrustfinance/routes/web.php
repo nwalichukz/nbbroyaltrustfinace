@@ -151,6 +151,8 @@ Route::get('/user/security-setting/{id?}', [UserController::class, 'userSecurity
 
 Route::get('/admin/user-list', [UserController::class, 'userList']);
 
+Route::post('/admin/create-user', [UserController::class, 'createAdmin']);
+
 
 Route::get('/admin/all-users', [UserController::class, 'getAll']);
 Route::get('/admin/get-account-officer', [UserController::class, 'getAccountOfficer']);
@@ -364,9 +366,18 @@ Route::view('/client/support', 'client.support');
 | Route::middleware(['auth', 'admin'])->prefix('dashboard')->group(...).
 */
 Route::middleware(['auth'])->group(function () {
-Route::view('/admin/dashboard', 'dashboard.index');
+//Route::view('/admin/dashboard', 'dashboard.index');
 Route::view('/dashboard/users', 'dashboard.users');
+Route::view('/admin/get-user-page', 'admin.add-user');
+Route::get('/admin/update-img/{id?}', [UserController::class, 'getImageUpdate']);
+
+Route::post('/admin/img-update', [UserController::class, 'uploadAvatarImage']);
+
+Route::get('/admin/dashboard', [UserController::class, 'adminDashboard']);
+
 Route::view('/dashboard/add-funds', 'dashboard.add-funds');
+Route::get('/admin/fund-user/{id}', [UserWalletController::class, 'getFundAccount']);
 });
+
 Route::redirect('/client-login', '/login'); 
 

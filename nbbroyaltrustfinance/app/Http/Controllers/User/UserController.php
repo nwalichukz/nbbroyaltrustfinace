@@ -4,14 +4,18 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Wallet\UserWalletController;
+use App\Http\Controllers\Wallet\UserTransactionHistoryController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Referral\ReferralController;
 use App\Http\Controllers\Email\Mailer;
 use App\Http\Controllers\Image\ImageController;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserImage;
 use App\Models\UserWallet;
 use Validator, Auth;
+use App\Models\UserTransactionHistory;
+
 
 class UserController extends Controller
 {
@@ -47,7 +51,7 @@ class UserController extends Controller
             $user->password = bcrypt($request['password']);
             $user->mobile_number = $request['mobile_number'];
             $user->country = $request['country'];
-            $user->access_level = 'admin';
+            $user->access_level = 'user';
             $user->kyc_status = 'verified';
             $user->status = 'active';
            $user->external_transfer_status = 'active';
@@ -113,6 +117,65 @@ class UserController extends Controller
 
       }
 
+
+      /**
+      * creates a user
+      *
+      * @param Request
+      *
+      *@return respoonse
+      */
+      public static function createAdmin(Request $request){
+        $validator = Validator::make($request->all(),
+        [
+        'email' => 'required|email|unique:users',
+        'name' => 'required',
+        'password' => 'required|min:6|',
+        'confirm_human' => 'required|min:3',
+        'mobile_number' => 'required',
+        'country' => 'required',    
+        ]);
+
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator);
+        } 
+
+         $three_letters = strtolower(substr($request['name'], 0, 3));
+         $lower_letters = strtolower($request['confirm_human']);
+         if(!empty($request['confirm_human']) && $lower_letters == $three_letters){
+          if(empty($request['name_one'])){
+           $create = self::save($request);
+            UserWalletController::save($create);
+
+        // referrals
+        
+       /*   $referral_code = self::getReferralCode($create);
+         if($referral_code != null){
+         if(!empty($request['referral_code']) && self::checkReferralCode($request['referral_code'])){
+          ReferralController::save($referral_code, $request['referral_code']);
+                     }
+              } */
+              
+         // Mailer::welcomeMail($request['email'], $request['name']);
+
+        if($create){
+          /*$email = $request['email'];
+          $title = 'Registration Successful';
+          $msg = 'Welcome '.$request['name'].'. Your registration on Metrokapital finance was successful';
+          Mailer::genericMail($email, $title, $msg); */ 
+
+            return redirect('admin/all-users')->with('success', 'User created successfully');
+        }else{
+            return redirect()->back()->with('error', 'Something went wrong user not created successfully');
+                    }
+          }  
+      }else{
+        return redirect()->back()->with('error', 'User not created. Make sure you provided correct answer to the confirm human question');
+           }
+
+      }
+
+
        /**
       * creates a user
       *
@@ -160,6 +223,29 @@ class UserController extends Controller
           if(Auth::user()->access_level=='admin'){
         $users = User::where('id', '!=', NULL)->orderBy('created_at', 'DESC')->paginate(3000);
         return view('dashboard.users')->with(['users'=>$users, 'userwallet']);
+          }else{
+            Auth::logout();
+            return redirect('login');
+          }
+        }else{
+          return redirect('login');
+        }
+      }
+
+        /**
+       * all users
+       * 
+       * @param $id
+       * 
+       * @return view
+       */
+      public static function adminDashboard(){
+        if(Auth::check()){
+          if(Auth::user()->access_level=='admin'){
+        $userCount = User::where('id', '!=', NULL)->count();
+        $totalWallet = UserWallet::where('id', '!=', NULL)->sum('balance');
+         $transactions = UserTransactionHistory::where('id', '!=', NULL)->orderBy('created_at', 'DESC')->paginate(20);
+        return view('dashboard.index')->with(['userCount'=>$userCount, 'totalWallet'=>$totalWallet, 'transactions'=>$transactions, 'user']);
           }else{
             Auth::logout();
             return redirect('login');
@@ -673,18 +759,18 @@ public static function changePassword(Request $request){
      * @param $settings page
      * 
      */
-    public static function uploadAccountOfficerProfile(Request $request){
+    public static function uploadAvatarImage(Request $request){
       $acc_officer = User::find($request['user_id']);
-      $acc_officer->avatar = ImageController::uploadAccOfficerImage($request);
+      $acc_officer->avatar = ImageController::uploadAvatar($request);
       $acc_officer =  $acc_officer->save();
       if($acc_officer){
-        return redirect('user/get-account-officer')->with('success', 'Account Officer Image uploaded successfully');
+        return redirect('admin/all-users')->with('success', 'User Image uploaded successfully');
       }else{
-        return redirect()->back()->with('error', 'Account Officer Image  not uploaded successfully. Pls try again');
+        return redirect()->back()->with('error', 'User Image  not uploaded successfully. Pls try again');
 
       }
      
-      return view('dashboard/src/html/components/forms/change-password');
+      return view('admin/update-user-image');
 
     }
 
@@ -701,6 +787,23 @@ public static function changePassword(Request $request){
       return view('dashboard/src/html/components/forms/upload-profile-image')->with(['user_id'=>$id]);
 
     }
+
+
+    public static function getImageUpdate($id)
+{
+    if (! Auth::check() || Auth::user()->access_level !== 'admin') {
+        Auth::logout();
+        return redirect('/login')->with('error', 'You are not authorized to view this page.');
+    }
+
+    $user = User::find($id);
+
+    if (! $user) {
+        abort(404);
+    }
+
+    return view('admin.update-user-image', compact('user'));
+}
 
 
 
