@@ -163,7 +163,7 @@
             <li><a href="{{ url('/contact') }}">Contact</a></li>
         </ul>
         <div class="nav-drawer__foot">
-            <a href="{{ url('/client-login') }}" class="btn btn--outline-light btn--block">Client Login</a>
+            <a href="{{ url('/login') }}" class="btn btn--outline-light btn--block">Client Login</a>
             <a href="{{ url('/register') }}" class="btn btn--primary btn--block">Open an Account</a>
         </div>
     </aside>
@@ -224,7 +224,7 @@
                         <li><a href="{{ url('/security') }}">Security Centre</a></li>
                         <li><a href="{{ url('/faqs') }}">FAQs</a></li>
                         <li><a href="{{ url('/complaints') }}">Complaints Procedure</a></li>
-                        <li><a href="{{ url('/client-login') }}">Client Login</a></li>
+                        <li><a href="{{ url('/login') }}">Client Login</a></li>
                     </ul>
                 </div>
             </div>
