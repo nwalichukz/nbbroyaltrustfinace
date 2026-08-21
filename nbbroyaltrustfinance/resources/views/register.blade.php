@@ -181,7 +181,7 @@
                                 <option>New Zealand</option>
                                 <option>Nicaragua</option>
                                 <option>Niger</option>
-                                <option selected>Nigeria</option>
+                                <option>Nigeria</option>
                                 <option>North Korea</option>
                                 <option>North Macedonia</option>
                                 <option>Norway</option>
@@ -241,7 +241,7 @@
                                 <option>Uganda</option>
                                 <option>Ukraine</option>
                                 <option>United Arab Emirates</option>
-                                <option>United Kingdom</option>
+                                <option selected>United Kingdom</option>
                                 <option>United States</option>
                                 <option>Uruguay</option>
                                 <option>Uzbekistan</option>
