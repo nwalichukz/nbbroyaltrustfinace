@@ -32,7 +32,7 @@
                 <p class="lede">Nbb Trust Kapital serves private individuals, families, corporations and institutions across five continents &mdash; combining UK regulatory standards with genuinely international reach.</p>
 
                 <div class="hero__actions">
-                    {{--<a href="{{ url('/open-account') }}" class="btn btn--primary">Open an Account</a>--}}
+                    <a href="{{ url('/register') }}" class="btn btn--primary">Open an Account</a>
                     <a href="{{ url('/contact') }}" class="btn btn--outline-light">Speak to a Private Banker</a>
                 </div>
 
@@ -268,5 +268,5 @@
             </div>
         </div>
     </section>
-
+ 
 @endsection
