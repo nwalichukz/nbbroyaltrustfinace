@@ -138,7 +138,7 @@
 
             <div class="nav__cta">
                 <a href="{{ url('/login') }}" class="btn btn--outline-dark">Client Login</a>
-                <a href="{{ url('/register') }}" class="btn btn--primary">Open an Account</a>
+                {{--<a href="{{ url('/register') }}" class="btn btn--primary">Open an Account</a>--}}
             </div>
 
             <button class="nav__toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-drawer" aria-label="Open menu">
@@ -164,7 +164,7 @@
         </ul>
         <div class="nav-drawer__foot">
             <a href="{{ url('/login') }}" class="btn btn--outline-light btn--block">Client Login</a>
-            <a href="{{ url('/register') }}" class="btn btn--primary btn--block">Open an Account</a>
+            {{--<a href="{{ url('/register') }}" class="btn btn--primary btn--block">Open an Account</a>--}}
         </div>
     </aside>
 
