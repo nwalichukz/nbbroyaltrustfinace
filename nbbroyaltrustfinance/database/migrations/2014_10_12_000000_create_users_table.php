@@ -26,7 +26,11 @@ return new class extends Migration
             $table->string('mobile_number')->unique()->nullable();
             $table->string('status')->default('active'); // active, suspended, banned, not-active   
             $table->string('access_level')->default('user'); //admin, user, super-admin,  
-                $table->string('gender')->nullable();  
+               // $table->string('gender')->nullable(); 
+             $table->string('date_of_birth')->nullable(); 
+              $table->string('house_address')->nullable();
+               $table->string('city')->nullable();
+                $table->string('zip_code')->nullable();
             $table->string('avatar')->nullable();  
             $table->rememberToken()->nullable();
               $table->timestamps();

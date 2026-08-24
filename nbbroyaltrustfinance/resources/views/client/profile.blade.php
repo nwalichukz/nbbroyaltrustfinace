@@ -18,6 +18,47 @@
         <!-- Main Settings Column -->
         <div class="profile-main">
 
+            <!-- Profile Picture Management Card -->
+            <div class="db-card profile-card">
+                <div class="card-head">
+                    <div>
+                        <h2>Profile Picture</h2>
+                        <p>Update your photo or remove your current image.</p>
+                    </div>
+                </div>
+
+                <div class="avatar-upload-layout" style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                    <div class="user-avatar-large" style="margin: 0; overflow: hidden; position: relative;">
+                        @if(!empty(Auth::user()->avatar))
+                            <img src="{{ asset('images/avatar/'.Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <span>{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>
+                        @endif
+                    </div>
+
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 220px;">
+                        <!-- Upload Form -->
+                        <form action="{{ url('/client/profile/avatar') }}" method="POST" enctype="multipart/form-data" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                            @csrf
+                            @method('POST')
+                            <input type="file" name="avatar" accept="image/*" required style="font-size: 0.85rem; max-width: 220px;">
+                            <button type="submit" class="btn-brand" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Upload Photo</button>
+                        </form>
+
+                        <!-- Delete Photo Form (Only shows if avatar exists) -->
+                        @if(!empty(Auth::user()->avatar))
+                            <form action="{{ url('/client/profile/avatar') }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-danger-outline" style="background: none; border: 1px solid #dc2626; color: #dc2626; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
+                                    Remove Current Photo
+                                </button>
+                            </form>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
             <!-- Personal Details Card -->
             <div class="db-card profile-card">
                 <div class="card-head">
@@ -40,7 +81,6 @@
                             <label for="first_name" class="form-label">First Name</label>
                             <input type="text" id="first_name" name="first_name" class="form-control" value="{{ Auth::user()->name }}" required>
                         </div>
-                       
                     </div>
 
                     <div class="form-row">
@@ -58,6 +98,220 @@
                         <label for="address" class="form-label">Residential Address</label>
                         <input type="text" id="address" name="address" class="form-control" value="{{ $clientAddress ?? '24 Belgrave Square, London, SW1X 8PS' }}">
                     </div>
+
+                    <div class="form-group">
+                        <label for="address" class="form-label">Zip Code</label>
+                        <input type="text" id="address" name="zip_code" class="form-control" value="{{ $clientAddress ?? '4000102' }}">
+                    </div>
+
+                      <div class="form-group">
+                        <label for="address" class="form-label">City</label>
+                        <input type="text" id="address" name="city" class="form-control" value="{{ $clientAddress ?? 'London, manchester' }}">
+                    </div>
+
+                    <div class="form-field">
+                            <label for="reg-country">Country of residence</label>
+                            <select id="reg-country" name="country" required>
+                                <option value="" disabled>Select your country&hellip;</option>
+                                <option>Afghanistan</option>
+                                <option>Albania</option>
+                                <option>Algeria</option>
+                                <option>Andorra</option>
+                                <option>Angola</option>
+                                <option>Antigua and Barbuda</option>
+                                <option>Argentina</option>
+                                <option>Armenia</option>
+                                <option>Australia</option>
+                                <option>Austria</option>
+                                <option>Azerbaijan</option>
+                                <option>Bahamas</option>
+                                <option>Bahrain</option>
+                                <option>Bangladesh</option>
+                                <option>Barbados</option>
+                                <option>Belarus</option>
+                                <option>Belgium</option>
+                                <option>Belize</option>
+                                <option>Benin</option>
+                                <option>Bhutan</option>
+                                <option>Bolivia</option>
+                                <option>Bosnia and Herzegovina</option>
+                                <option>Botswana</option>
+                                <option>Brazil</option>
+                                <option>Brunei</option>
+                                <option>Bulgaria</option>
+                                <option>Burkina Faso</option>
+                                <option>Burundi</option>
+                                <option>Cabo Verde</option>
+                                <option>Cambodia</option>
+                                <option>Cameroon</option>
+                                <option>Canada</option>
+                                <option>Central African Republic</option>
+                                <option>Chad</option>
+                                <option>Chile</option>
+                                <option>China</option>
+                                <option>Colombia</option>
+                                <option>Comoros</option>
+                                <option>Congo (Brazzaville)</option>
+                                <option>Congo (DRC)</option>
+                                <option>Costa Rica</option>
+                                <option>Croatia</option>
+                                <option>Cuba</option>
+                                <option>Cyprus</option>
+                                <option>Czechia</option>
+                                <option>Denmark</option>
+                                <option>Djibouti</option>
+                                <option>Dominica</option>
+                                <option>Dominican Republic</option>
+                                <option>Ecuador</option>
+                                <option>Egypt</option>
+                                <option>El Salvador</option>
+                                <option>Equatorial Guinea</option>
+                                <option>Eritrea</option>
+                                <option>Estonia</option>
+                                <option>Eswatini</option>
+                                <option>Ethiopia</option>
+                                <option>Fiji</option>
+                                <option>Finland</option>
+                                <option>France</option>
+                                <option>Gabon</option>
+                                <option>Gambia</option>
+                                <option>Georgia</option>
+                                <option>Germany</option>
+                                <option>Ghana</option>
+                                <option>Greece</option>
+                                <option>Grenada</option>
+                                <option>Guatemala</option>
+                                <option>Guinea</option>
+                                <option>Guinea-Bissau</option>
+                                <option>Guyana</option>
+                                <option>Haiti</option>
+                                <option>Honduras</option>
+                                <option>Hungary</option>
+                                <option>Iceland</option>
+                                <option>India</option>
+                                <option>Indonesia</option>
+                                <option>Iran</option>
+                                <option>Iraq</option>
+                                <option>Ireland</option>
+                                <option>Israel</option>
+                                <option>Italy</option>
+                                <option>Ivory Coast</option>
+                                <option>Jamaica</option>
+                                <option>Japan</option>
+                                <option>Jordan</option>
+                                <option>Kazakhstan</option>
+                                <option>Kenya</option>
+                                <option>Kiribati</option>
+                                <option>Kosovo</option>
+                                <option>Kuwait</option>
+                                <option>Kyrgyzstan</option>
+                                <option>Laos</option>
+                                <option>Latvia</option>
+                                <option>Lebanon</option>
+                                <option>Lesotho</option>
+                                <option>Liberia</option>
+                                <option>Libya</option>
+                                <option>Liechtenstein</option>
+                                <option>Lithuania</option>
+                                <option>Luxembourg</option>
+                                <option>Madagascar</option>
+                                <option>Malawi</option>
+                                <option>Malaysia</option>
+                                <option>Maldives</option>
+                                <option>Mali</option>
+                                <option>Malta</option>
+                                <option>Marshall Islands</option>
+                                <option>Mauritania</option>
+                                <option>Mauritius</option>
+                                <option>Mexico</option>
+                                <option>Micronesia</option>
+                                <option>Moldova</option>
+                                <option>Monaco</option>
+                                <option>Mongolia</option>
+                                <option>Montenegro</option>
+                                <option>Morocco</option>
+                                <option>Mozambique</option>
+                                <option>Myanmar</option>
+                                <option>Namibia</option>
+                                <option>Nauru</option>
+                                <option>Nepal</option>
+                                <option>Netherlands</option>
+                                <option>New Zealand</option>
+                                <option>Nicaragua</option>
+                                <option>Niger</option>
+                                <option>Nigeria</option>
+                                <option>North Korea</option>
+                                <option>North Macedonia</option>
+                                <option>Norway</option>
+                                <option>Oman</option>
+                                <option>Pakistan</option>
+                                <option>Palau</option>
+                                <option>Palestine</option>
+                                <option>Panama</option>
+                                <option>Papua New Guinea</option>
+                                <option>Paraguay</option>
+                                <option>Peru</option>
+                                <option>Philippines</option>
+                                <option>Poland</option>
+                                <option>Portugal</option>
+                                <option>Qatar</option>
+                                <option>Romania</option>
+                                <option>Russia</option>
+                                <option>Rwanda</option>
+                                <option>Saint Kitts and Nevis</option>
+                                <option>Saint Lucia</option>
+                                <option>Saint Vincent and the Grenadines</option>
+                                <option>Samoa</option>
+                                <option>San Marino</option>
+                                <option>Sao Tome and Principe</option>
+                                <option>Saudi Arabia</option>
+                                <option>Senegal</option>
+                                <option>Serbia</option>
+                                <option>Seychelles</option>
+                                <option>Sierra Leone</option>
+                                <option>Singapore</option>
+                                <option>Slovakia</option>
+                                <option>Slovenia</option>
+                                <option>Solomon Islands</option>
+                                <option>Somalia</option>
+                                <option>South Africa</option>
+                                <option>South Korea</option>
+                                <option>South Sudan</option>
+                                <option>Spain</option>
+                                <option>Sri Lanka</option>
+                                <option>Sudan</option>
+                                <option>Suriname</option>
+                                <option>Sweden</option>
+                                <option>Switzerland</option>
+                                <option>Syria</option>
+                                <option>Taiwan</option>
+                                <option>Tajikistan</option>
+                                <option>Tanzania</option>
+                                <option>Thailand</option>
+                                <option>Timor-Leste</option>
+                                <option>Togo</option>
+                                <option>Tonga</option>
+                                <option>Trinidad and Tobago</option>
+                                <option>Tunisia</option>
+                                <option>Turkey</option>
+                                <option>Turkmenistan</option>
+                                <option>Tuvalu</option>
+                                <option>Uganda</option>
+                                <option>Ukraine</option>
+                                <option>United Arab Emirates</option>
+                                <option selected>United Kingdom</option>
+                                <option>United States</option>
+                                <option>Uruguay</option>
+                                <option>Uzbekistan</option>
+                                <option>Vanuatu</option>
+                                <option>Vatican City</option>
+                                <option>Venezuela</option>
+                                <option>Vietnam</option>
+                                <option>Yemen</option>
+                                <option>Zambia</option>
+                                <option>Zimbabwe</option>
+                            </select>
+                        </div>
 
                     <div class="form-actions">
                         <button type="submit" class="btn-brand">Save Changes</button>
@@ -107,14 +361,12 @@
 
             <!-- Profile Summary Badge -->
             <div class="db-card user-badge-card">
-                <div class="user-avatar-large">
-                    <span>@if(!empty(Auth::user()->avatar))
-                                        <img src="{{ asset('images/avatar/'.Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" class="avatar" style="object-fit: cover;">
-                                    @else
-                                      {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
-                                    @endif
-
-                    </span>
+                <div class="user-avatar-large" style="overflow: hidden;">
+                    @if(!empty(Auth::user()->avatar))
+                        <img src="{{ asset('images/avatar/'.Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    @else
+                        <span>{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>
+                    @endif
                 </div>
                 <h3>{{ Auth::user()->name}}</h3>
                 <span class="user-tag">Private Client</span>

@@ -49,8 +49,8 @@ class UserController extends Controller
             $user->name = $request['name'];
             $user->email = $request['email'];
             $user->password = bcrypt($request['password']);
-            $user->mobile_number = $request['mobile_number'];
-            $user->country = $request['country'];
+            $user->mobile_number = $request['mobile_number']??null;
+            $user->country = $request['country']??null;
             $user->access_level = 'user';
             $user->kyc_status = 'verified';
             $user->status = 'active';
@@ -73,19 +73,17 @@ class UserController extends Controller
         'email' => 'required|email|unique:users',
         'name' => 'required',
         'password' => 'required|min:6|',
-        'confirm_human' => 'required|min:3',
-        'mobile_number' => 'required',
-        'country' => 'required',    
+        
         ]);
 
         if($validator->fails()){
             return redirect()->back()->withErrors($validator);
         } 
 
-         $three_letters = strtolower(substr($request['name'], 0, 3));
+        /* $three_letters = strtolower(substr($request['name'], 0, 3));
          $lower_letters = strtolower($request['confirm_human']);
-         if(!empty($request['confirm_human']) && $lower_letters == $three_letters){
-          if(empty($request['name_one'])){
+         if(!empty($request['confirm_human']) && $lower_letters == $three_letters){*/
+        //  if(empty($request['name_one'])){
            $create = self::save($request);
             UserWalletController::save($create);
 
@@ -110,10 +108,10 @@ class UserController extends Controller
         }else{
             return redirect()->back()->with('error', 'Something went wrong user not created successfully');
                     }
-          }  
-      }else{
+         // }  
+     /* }else{
         return redirect()->back()->with('error', 'User not created. Make sure you provided correct answer to the confirm human question');
-           }
+           }*/
 
       }
 
@@ -267,6 +265,30 @@ class UserController extends Controller
         if(!empty($request['name'])){
         $update->name = $request['name'];
         }
+
+        if(!empty($request['country'])){
+        $update->country = $request['country'];
+
+        }
+        if(!empty($request['email'])){
+        $update->email = $request['email'];
+
+        }
+          if(!empty($request['date_of_birth'])){
+        $update->date_of_birth = $request['date_of_birth'];
+
+        }
+
+          if(!empty($request['city'])){
+        $update->city = $request['city'];
+
+        }
+
+          if(!empty($request['zip_code'])){
+        $update->zip_code = $request['zip_code '];
+
+        }
+
         if(!empty($request['gender'])){
         $update->gender = $request['gender'];
         }

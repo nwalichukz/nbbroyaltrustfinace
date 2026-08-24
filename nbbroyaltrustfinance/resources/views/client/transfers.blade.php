@@ -2,7 +2,7 @@
 @php($activeNav = 'transfers')
 @section('title', 'Send Money | Nbb Trust Kapital')
 
-@section('content')
+ 
     <div class="db-page-head">
         <div>
             <div class="breadcrumb"><a href="{{ url('/client/dashboard') }}">Client Area</a> <span>/</span> <span>Send Money</span></div>

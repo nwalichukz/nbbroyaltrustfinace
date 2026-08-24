@@ -30,10 +30,10 @@
                             <input type="email" id="reg-email" name="email" placeholder="you@example.com" autocomplete="email" required>
                         </div>
 
-                        <div class="form-field">
+                        {{--<div class="form-field">
                             <label for="reg-phone">Mobile number</label>
                             <input type="tel" id="reg-phone" name="mobile_number" placeholder="+1 (555) 000-0000" autocomplete="tel" required>
-                        </div>
+                        </div>--}}
 
                         <div class="form-field">
                             <label for="reg-password">Password</label>
@@ -41,7 +41,7 @@
                             <span class="hint">Use a mix of letters, numbers and symbols for a stronger password.</span>
                         </div>
 
-                        <div class="form-field">
+                        {{--<div class="form-field">
                             <label for="reg-password-confirmation">Confirm password</label>
                             <input type="password" id="reg-password-confirmation" name="password_confirmation" placeholder="Re-enter your password" autocomplete="new-password" minlength="10" required>
                         </div>
@@ -253,7 +253,7 @@
                                 <option>Zambia</option>
                                 <option>Zimbabwe</option>
                             </select>
-                        </div>
+                        </div>--}}
 
                         <div class="form-check">
                             <input type="checkbox" id="reg-terms" name="terms" required>

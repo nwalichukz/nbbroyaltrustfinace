@@ -58,7 +58,7 @@
                                 </div>
 
                                 
-                                <form method="POST" action="{{ url('/create-user ')}}">
+                                <form method="POST" action="{{ url('/create-user')}}">
                                 @csrf
                                     <div class="form-group">
                                         <label class="form-label" for="name">Name</label>

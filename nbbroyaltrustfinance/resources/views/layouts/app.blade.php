@@ -75,7 +75,7 @@
             <div class="topbar__left">
                 <a href="tel:+442012345678">+44 20 1234 5678</a>
                 <span class="topbar__divider" aria-hidden="true"></span>
-                <a href="mailto:enquiries@nbbtrustkapital.com">enquiries@nbbtrustkapital.com</a>
+                <a href="mailto:enquiries@nbbtrustkapital.com">nbbtrustkapital@gmail.com</a>
                 <span class="topbar__divider" aria-hidden="true"></span>
                 <span>London &middot; United Kingdom</span>
             </div>
@@ -232,10 +232,9 @@
 
         <div class="container footer-legal">
             <p>
-                Nbb Trust Kapital is a trading name of Nbb Trust Kapital Limited, a company registered in England and Wales
-                under company number [COMPANY NUMBER]. Registered office: [REGISTERED ADDRESS], United Kingdom.
-                Nbb Trust Kapital Limited is authorised and regulated by the Financial Conduct Authority under
-                firm reference number [FCA FRN] &mdash; <em>replace with your genuine registration details before publishing.</em>
+                Nbb Trust Kapital is a trading name of Nbb Trust Kapital Limited, a company registered in England and Wales.
+               
+                Nbb Trust Kapital Limited is authorised and regulated by the Financial Conduct Authority.
             </p>
             <p>
                 Eligible deposits held with Nbb Trust Kapital are protected by the Financial Services Compensation

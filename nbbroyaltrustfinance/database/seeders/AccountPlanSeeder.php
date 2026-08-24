@@ -20,7 +20,7 @@ class AccountPlanSeeder extends Seeder
             'parent_name' => 'Savings',
             'name' => 'Beginner Plan',
             'min_amt'=>'150',
-            'max_amt' => '4999',
+            'max_amt' => '4999', 
             'earning_percentage'=> '0.8',
             'duration' => '60',
             'int_interval'=> '7',
