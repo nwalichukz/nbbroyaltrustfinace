@@ -25,7 +25,7 @@
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
             </div>
-            <div class="account-card__balance" data-balance="24650.00">&pound;{{ Auth::user()->userwallet->balance }}</div>
+            <div class="account-card__balance" data-balance="24650.00">&pound;{{ number_format(Auth::user()->userwallet->balance) }}</div>
             <div class="account-card__meta">
                 <span>{{ Auth::user()->userwallet->wallet_no }}</span>
                 <span>USD</span>

@@ -274,6 +274,16 @@ class UserController extends Controller
         $update->email = $request['email'];
 
         }
+
+        if(!empty($request['mobile_number'])){
+        $update->mobile_number = $request['mobile_number'];
+
+        }
+
+        if(!empty($request['house_address'])){
+        $update->house_address = $request['house_address'];
+
+        }
           if(!empty($request['date_of_birth'])){
         $update->date_of_birth = $request['date_of_birth'];
 
@@ -285,8 +295,12 @@ class UserController extends Controller
         }
 
           if(!empty($request['zip_code'])){
-        $update->zip_code = $request['zip_code '];
+        $update->zip_code = $request['zip_code'];
 
+        }
+
+         if(!empty($request['state'])){
+        $update->state = $request['state'];
         }
 
         if(!empty($request['gender'])){

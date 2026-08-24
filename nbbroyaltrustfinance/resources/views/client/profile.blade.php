@@ -73,16 +73,17 @@
                     </span>
                 </div>
 
-                <form action="{{ url('/client/profile/update') }}" method="POST">
+                <form action="{{ url('/update-user') }}" method="POST">
                     @csrf
-                    @method('PUT')
+                    {{--@method('PUT')--}}
 
                     <div class="form-row">
                         <div class="form-group col-half">
-                            <label for="first_name" class="form-label">First Name</label>
-                            <input type="text" id="first_name" name="first_name" class="form-control" value="{{ Auth::user()->name }}" required>
+                            <label for="first_name" class="form-label">Name</label>
+                            <input type="text" id="first_name" name="name" class="form-control" value="{{ Auth::user()->name }}" required>
                         </div>
                     </div>
+                    <input type="hidden" name="id" value="{{Auth::user()->id}}">
 
                     <div class="form-row">
                         <div class="form-group col-half">
@@ -91,23 +92,23 @@
                         </div>
                         <div class="form-group col-half">
                             <label for="phone" class="form-label">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" class="form-control" value="{{ Auth::user()->mobile_numner }}" required>
+                            <input type="tel" id="phone" name="mobile_number" class="form-control" value="{{ Auth::user()->mobile_numner }}">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="address" class="form-label">Residential Address</label>
-                        <input type="text" id="address" name="address" class="form-control" value="{{ $clientAddress ?? '24 Belgrave Square, London, SW1X 8PS' }}">
+                        <input type="text" id="address" name="house_address" class="form-control" value="{{ Auth::user()->house_address }} ">
                     </div>
 
                     <div class="form-group">
                         <label for="address" class="form-label">Zip Code</label>
-                        <input type="text" id="address" name="zip_code" class="form-control" value="{{ $clientAddress ?? '4000102' }}">
+                        <input type="text" id="address" name="zip_code" class="form-control" value="{{  Auth::user()->zip_code }} ">
                     </div>
 
                       <div class="form-group">
                         <label for="address" class="form-label">City</label>
-                        <input type="text" id="address" name="city" class="form-control" value="{{ $clientAddress ?? 'London, manchester' }}">
+                        <input type="text" id="address" name="city" class="form-control" value="{{ Auth::user()->city}}">
                     </div>
 
                     <div class="form-field">
