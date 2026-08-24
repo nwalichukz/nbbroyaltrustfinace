@@ -38,9 +38,10 @@
 
                     <div style="flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 220px;">
                         <!-- Upload Form -->
-                        <form action="{{ url('/client/profile/avatar') }}" method="POST" enctype="multipart/form-data" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                        <form action="{{ url('/admin/img-update') }}" method="POST" enctype="multipart/form-data" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
                             @csrf
                             @method('POST')
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                             <input type="file" name="avatar" accept="image/*" required style="font-size: 0.85rem; max-width: 220px;">
                             <button type="submit" class="btn-brand" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Upload Photo</button>
                         </form>

@@ -25,7 +25,7 @@
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
             </div>
-            <div class="account-card__balance" data-balance="24650.00">&dollar;{{ Auth::user()->userwallet->balance }}</div>
+            <div class="account-card__balance" data-balance="24650.00">&pound;{{ Auth::user()->userwallet->balance }}</div>
             <div class="account-card__meta">
                 <span>{{ Auth::user()->userwallet->wallet_no }}</span>
                 <span>USD</span>
@@ -70,7 +70,7 @@
 
     {{-- ---------- Security nudge & Beneficiaries ---------- --}}
     <div style="display:flex; flex-direction:column; gap:1.2rem; margin-top:1.4rem;">
-        <div class="nudge-card">
+         {{--<div class="nudge-card">
             <span class="nudge-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></span>
             <div>
                 <h3>Turn on two-factor authentication</h3>
@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        {{--<div class="db-card">
+       <div class="db-card">
             <div class="db-card__head"><h2>Your beneficiaries</h2></div>
             <div style="display:flex; flex-direction:column; gap:0.8rem;">
                 <div class="client-card">

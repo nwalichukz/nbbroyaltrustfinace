@@ -786,7 +786,7 @@ public static function changePassword(Request $request){
       $acc_officer->avatar = ImageController::uploadAvatar($request);
       $acc_officer =  $acc_officer->save();
       if($acc_officer){
-        return redirect('admin/all-users')->with('success', 'User Image uploaded successfully');
+        return redirect()->back()->with('success', 'User Image uploaded successfully');
       }else{
         return redirect()->back()->with('error', 'User Image  not uploaded successfully. Pls try again');
 
