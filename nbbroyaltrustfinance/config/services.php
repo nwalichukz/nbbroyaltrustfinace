@@ -31,4 +31,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+
+    'zeptomail' => [
+    'token' => env('ZEPTOMAIL_TOKEN'),
+    'url' => env('ZEPTOMAIL_API_URL', 'https://api.zeptomail.eu/v1.1/email'),
+    'from_address' => env('ZEPTOMAIL_FROM_ADDRESS'),
+    'from_name' => env('ZEPTOMAIL_FROM_NAME'),
+        ],
+
+
 ];
