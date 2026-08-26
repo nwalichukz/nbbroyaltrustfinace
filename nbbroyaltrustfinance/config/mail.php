@@ -78,6 +78,11 @@ return [
                 'log',
             ],
         ],
+
+        'zeptomail' => [
+        'transport' => 'zeptomail',
+        'key' => env('ZEPTOMAIL_TOKEN'),
+          ],
     ],
 
     /*
