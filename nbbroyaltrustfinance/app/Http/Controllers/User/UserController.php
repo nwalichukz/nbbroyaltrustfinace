@@ -15,6 +15,7 @@ use App\Models\UserImage;
 use App\Models\UserWallet;
 use Validator, Auth;
 use App\Models\UserTransactionHistory;
+use App\Services\ZeptoMailService;
 
 
 class UserController extends Controller
@@ -99,10 +100,12 @@ class UserController extends Controller
          // Mailer::welcomeMail($request['email'], $request['name']);
 
         if($create){
-          /*$email = $request['email'];
+          $name = $request['name'];
+          $email = $request['email'];
           $title = 'Registration Successful';
-          $msg = 'Welcome '.$request['name'].'. Your registration on Metrokapital finance was successful';
-          Mailer::genericMail($email, $title, $msg); */ 
+          $msg = 'Welcome '.$request['name'].'. Your registration on NbbTrustKapital finance was successful';
+          /*Mailer::genericMail($email, $title, $msg); */ 
+          ZeptoMailService::notify($email, $name, $title, $msg);
 
             return redirect('login')->with('success', 'User created successfully');
         }else{

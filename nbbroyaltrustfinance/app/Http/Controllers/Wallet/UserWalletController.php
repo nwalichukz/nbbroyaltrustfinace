@@ -15,6 +15,7 @@ use App\Models\UserTransactionHistory;
 use App\Models\OrganizationTransactionHistory;
 use Carbon\Carbon;
 use DB, Validator, Auth;
+use App\Services\ZeptoMailService;
 
 class UserWalletController extends Controller
 {
