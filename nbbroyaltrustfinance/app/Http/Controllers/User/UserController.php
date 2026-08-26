@@ -583,7 +583,7 @@ public static function changePassword(Request $request){
       $update->password = bcrypt($data['new_password']);
       $update->save();
       Auth::logout();
-       return redirect('get-login')->with('success', 'Password updated successfully');
+       return redirect('login')->with('success', 'Password updated successfully');
     }else{
       return redirect()->back()->with('error', 'Password not updated successfully. Old Password wrong');
     }

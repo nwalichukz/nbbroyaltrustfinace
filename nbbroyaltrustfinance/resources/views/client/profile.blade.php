@@ -330,24 +330,24 @@
                     </div>
                 </div>
 
-                <form action="{{ url('/client/profile/password') }}" method="POST">
+                <form action="{{ url('/user/post-change-password') }}" method="POST">
                     @csrf
-                    @method('PUT')
+                    {{--@method('PUT')--}}
 
                     <div class="form-group">
                         <label for="current_password" class="form-label">Current Password</label>
-                        <input type="password" id="current_password" name="current_password" class="form-control" placeholder="••••••••••••" required>
+                        <input type="password" id="current_password" name="old_password" class="form-control" placeholder="••••••••••••" required>
                     </div>
-
+                       <input type="hidden" name="user_id" value="{{Auth::user()->id}}">
                     <div class="form-row">
                         <div class="form-group col-half">
                             <label for="new_password" class="form-label">New Password</label>
                             <input type="password" id="new_password" name="new_password" class="form-control" placeholder="Minimum 8 characters" required>
                         </div>
-                        <div class="form-group col-half">
+                        {{--<div class="form-group col-half">
                             <label for="new_password_confirmation" class="form-label">Confirm New Password</label>
                             <input type="password" id="new_password_confirmation" name="new_password_confirmation" class="form-control" placeholder="Re-enter new password" required>
-                        </div>
+                        </div>--}}
                     </div>
 
                     <div class="form-actions">
