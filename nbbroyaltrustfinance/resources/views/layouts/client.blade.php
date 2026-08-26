@@ -147,6 +147,10 @@
                         <option value="de">Deutsch</option>
                         <option value="ha">Hausa</option>
                         <option value="ig">Igbo</option>
+                        <option value="pl">Polski</option>
+                        <option value="es">Español</option>
+                        <option value="bg">Български</option>
+
                         <option value="yo">Yor&ugrave;b&aacute;</option>
                         <option value="it">Italiano</option>
                         <option value="ru">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</option>
