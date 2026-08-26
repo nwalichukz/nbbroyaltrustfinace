@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    /*public function boot()
     {
         // Define the custom 'zeptomail' transport in AppServiceProvider
     Mail::extend('zeptomail', function (array $config = []) {
@@ -31,5 +31,5 @@ class AppServiceProvider extends ServiceProvider
         $client->setApiKey($config['key']);
         return new ZeptoMailTransport($client);
     });
-    }
+    }*/
 }
