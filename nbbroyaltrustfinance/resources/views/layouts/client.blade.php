@@ -170,10 +170,10 @@
                     </button>
 
                     <div class="db-profile" id="db-profile">
-                       <button class="db-profile__btn" id="db-profile-toggle" aria-expanded="false" aria-haspopup="true">
-    <span class="avatar">
+              <button class="db-profile__btn" id="db-profile-toggle" aria-expanded="false" aria-haspopup="true">
+    <span class="avatar" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background-color: #e2e8f0;">
         @if(Auth::user()->avatar)
-            <img src="{{ asset('images/avatar/'. Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" class="avatar-img">
+            <img src="{{ asset('images/avatar/'. Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}" class="avatar-img" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
         @else
             {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
         @endif
@@ -183,6 +183,7 @@
         <span>{{ Auth::user()->access_level }}</span>
     </span>
 </button>
+
 
                         <div class="dropdown-menu" id="db-profile-menu">
                             <a href="{{ url('client/profile') ?? url('/client/profile') }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> My Profile</a>
