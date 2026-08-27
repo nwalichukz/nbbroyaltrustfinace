@@ -93,8 +93,13 @@ class UserWalletController extends Controller
     public static function makeCredit(Request $request){
        $credit = self::credit($request);
         if($credit){
+            $user = User::find($request['user_id']);
            // return $credit;
             // Mailer::creditMail($credit->user->email, $request['amount'], $credit->balance);
+             $email = $user->email;
+                $title = 'Credit Alert Notification';
+                $msg = '£'.$request['amount'].' successfully deposited to your wallet';
+                 ZeptoMailService::notify($email, $user->name, $title, $msg);
 
             return redirect('/admin/all-users')->with
                 ('success', $request['amount'].' credited to your wallet successfully');
