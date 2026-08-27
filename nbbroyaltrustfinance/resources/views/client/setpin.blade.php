@@ -242,7 +242,7 @@
                 <p>Create a 4-digit security PIN to enable transfers, payments, and account authorization.</p>
             </div>
 
-            <form action="{{ route('client.pin.update') }}" method="POST">
+            <form action="{{ url('client/pin-update') }}" method="POST">
                 @csrf
 
                 <div class="form-group">
