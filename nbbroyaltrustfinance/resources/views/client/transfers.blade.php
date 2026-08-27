@@ -111,6 +111,11 @@
                     </div>
                 </div>
 
+                 <div class="form-group">
+                    <label for="recipient_name" class="form-label">Home Address</label>
+                    <input type="text" name="home_address" id="recipient_name" class="form-control" placeholder="12 Hillview Way, Silicon Valley, California" required>
+                </div>
+
                 <div class="form-actions">
                     <button type="submit" class="btn-primary-lg">
                         <span>Continue Transfer</span>

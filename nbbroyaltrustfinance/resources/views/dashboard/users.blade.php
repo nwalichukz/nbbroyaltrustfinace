@@ -54,7 +54,7 @@
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
                                     </button>
                                     <div class="row-dropdown__menu">
-                                        <a href="{{ url('/dashboard/users/' . $u->id . '/edit') }}" class="row-dropdown__item">Edit account</a>
+                                        {{--<a href="{{ url('/dashboard/users/' . $u->id . '/edit') }}" class="row-dropdown__item">Edit account</a>--}}
                                         <a href="{{ url('/admin/update-img/'.$u->id) }}" class="row-dropdown__item">Edit Image</a>
                                         @if(Auth::user()->external_transfer_status == 'active')
                                         <a href="{{ url('/admin/make-inactive-external-transfer/'.$u->id.'/block') }}" class="row-dropdown__item">Stop External transfer</a>
