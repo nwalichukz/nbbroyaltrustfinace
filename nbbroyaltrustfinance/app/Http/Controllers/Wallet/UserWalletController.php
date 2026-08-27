@@ -341,27 +341,31 @@ class UserWalletController extends Controller
     public static function transferToAnotherUserWalletId(Request $request){
         $validation = Validator::make($request->all(),
             [
-                "sender_wallet_no" => "required",
+               // "user_id" => "required",
                 "receiver_wallet_no" =>"required",
                 "amount"=>"required"
             ]);
+        $sender_id = Auth::user()->id;
          // return 345;
         if($validation->fails()){
             return redirect()->back()->withErrors($validation);
+            if(Auth::user()->status !== 'active'){
+               return redirect()->back()->with('error','Something Went Wrong. Transfer could not be completed. Try again later');
+            }
         }
       // return $request->all();
         if($request['receiver_wallet_no'] !== $request['sender_wallet_no']){
-        if(self::checkAmt($request['sender_user_id'], $request['amount'])){
+        if(self::checkAmt($sender_id, $request['amount'])){
             try{
                 $credit = UserWallet::where('wallet_no', $request['receiver_wallet_no'])->with(['user'])->lockForUpdate()->first();
-                $debit = UserWallet::where('user_id', $request['sender_user_id'])->with(['user'])->lockForUpdate()->first();
+                $debit = UserWallet::where('user_id',   $sender_id)->with(['user'])->lockForUpdate()->first();
                
                 DB::transaction(function() use ($request, $credit, $debit){
                     if($debit->balance >= $request['amount']){
                         $debit->balance = $debit->balance - $request['amount'];
                         $debit->save();
                      $debit_transaction_record = [
-                            'user_id' => $request['sender_user_id'],
+                            'user_id' => $sender_id,
                             'amount' => $request['amount'],
                             'transaction_type' => 'debit',
                             'purpose' => 'transfer to '.$credit->user->name,
@@ -385,8 +389,8 @@ class UserWalletController extends Controller
 
                 $email = Auth::user()->email;
                 $title = 'Transfer made successfully';
-                $msg = '$'.$request['amount'].' transfered successfully to '.$credit->user->name;
-                Mailer::genericMail($email, $title, $msg);
+                $msg = '£'.$request['amount'].' transfered successfully to '.$credit->user->name;
+                 ZeptoMailService::notify($email, Auth::user()->name, $title, $msg);
          
                 return redirect()->back()->with('success', '$'.$request['amount'].' transfered successfully to '.$credit->user->name);
                

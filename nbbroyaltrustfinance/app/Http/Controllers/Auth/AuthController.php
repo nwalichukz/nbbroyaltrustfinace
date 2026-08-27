@@ -32,7 +32,7 @@ class AuthController extends Controller
             return redirect()->back()->withErrors($validator);
         } 
 
-        $credentials = ['email' => $request['email'], 'status'=>'active', 'password'=>$request['password'], 'kyc_status'=>'verified'];
+        $credentials = ['email' => $request['email'], 'password'=>$request['password'], 'kyc_status'=>'verified'];
         $credentials_not_verified = ['email' => $request['email'], 'status'=>'active',  'password'=>$request['password'], 'kyc_status'=>'not-verified'];
         $credentials_declined = ['email' => $request['email'], 'status'=>'active', 'password'=>$request['password'], 'kyc_status'=>'declined'];
 
