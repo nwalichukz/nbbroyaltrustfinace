@@ -354,7 +354,7 @@ class UserWalletController extends Controller
          // return 345;
         if($validation->fails()){
             return redirect()->back()->withErrors($validation);
-            if(Auth::user()->status !== 'active'){
+            if(Auth::user()->external_transfer_status !== 'active'){
                return redirect()->back()->with('error','Something Went Wrong. Transfer could not be completed. Try again later');
             }
         }

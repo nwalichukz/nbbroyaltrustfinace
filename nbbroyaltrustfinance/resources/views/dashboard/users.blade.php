@@ -56,7 +56,11 @@
                                     <div class="row-dropdown__menu">
                                         <a href="{{ url('/dashboard/users/' . $u->id . '/edit') }}" class="row-dropdown__item">Edit account</a>
                                         <a href="{{ url('/admin/update-img/'.$u->id) }}" class="row-dropdown__item">Edit Image</a>
-                                        <a href="{{ url('/dashboard/users/' . $u->id . '/edit') }}" class="row-dropdown__item">Stop External transfer</a>
+                                        @if(Auth::user()->external_transfer_status == 'active')
+                                        <a href="{{ url('/admin/make-active-external-transfer/'.$u->id.'/block') }}" class="row-dropdown__item">Stop External transfer</a>
+                                        @else
+                                         <a href="{{ url('/admin/make-active-external-transfer/'.$u->id.'/active') }}" class="row-dropdown__item">Activate External transfer</a>
+                                        @endif
                                         <a href="{{ url('/admin/fund-user/' . $u->id) }}" class="row-dropdown__item">Fund account</a>
                                         <div class="row-dropdown__divider"></div>
                                         <a href="{{ url('/dashboard/users/' . $u->id . '/delete') }}" class="row-dropdown__item row-dropdown__item--danger"
