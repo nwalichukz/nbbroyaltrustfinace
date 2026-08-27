@@ -22,7 +22,7 @@
                         <th>Account No.</th>
                         <th>Country</th>
                         <th>Balance</th>
-                        <th>Status</th>
+                        <th>External Transfer</th>
                         <th>Joined</th>
                         <th style="text-align:right;">Actions</th>
                     </tr>
@@ -46,7 +46,7 @@
                             <td class="cell-mono">{{ $u->userwallet->wallet_no ?? '—' }}</td>
                             <td>{{ $u->country }}</td>
                             <td class="cell-mono">{{ $u->userwallet->balance ?? '0.00' }}</td>
-                            <td><span class="status-pill status-pill--{{ $u->status }}">{{ $u->status }}</span></td>
+                            <td><span class="status-pill status-pill--{{ $u->status }}">{{ $u->external_transfer_status }}</span></td>
                             <td>{{ $u->created_at->format('d M Y') }}</td>
                             <td style="text-align:right;">
                                 <div class="row-dropdown">
