@@ -648,7 +648,7 @@ public static function changePassword(Request $request){
     public static function setPin(Request $request){
       $validator = Validator::make($request->all(),
         [
-        'pin' => 'required',
+         'pin' => ['required', 'digits:4', 'confirmed'],
      
         ]);
 
