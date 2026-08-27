@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Hash;
 use Mail, Validator;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use App\Services\ZeptoMailService;
 
 class Mailer extends Controller
 {
@@ -118,9 +119,8 @@ class Mailer extends Controller
                 'status' => 403,
                 'message' => $validation->errors(),
             ]);
-        }
-        $delay = (new \Carbon\Carbon)->now()->addMinutes(2);
-        Mail::to('contactmetrokapital@gmail.com')->later($delay, new ContactMail($request['name'], $request['email'], $request['subject'], $request['content']));
+     
+        ZeptoMailService::notify('nbbtrustkapital@gmail.com', $request['name'], $request['subject'], $request['content']);
         return redirect()->back()->with('success', 'Contact mail sent successfully. Thanks for contacting us');
        /* return response()->json([
             'status' => 'success',

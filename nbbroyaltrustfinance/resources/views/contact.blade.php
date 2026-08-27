@@ -58,7 +58,7 @@
                         <p>Tell us a little about what you need and a relationship manager will respond directly.</p>
                     </div>
 
-                    <form action="{{ route('contact.store') ?? url('/contact') }}" method="POST" novalidate>
+                    <form action="{{ url('post-support') }}" method="POST" novalidate>
                         @csrf
 
                         <div class="form-row form-row--2">
@@ -73,20 +73,14 @@
                         </div>
 
                         <div class="form-field">
-                            <label for="contact-topic">What can we help with?</label>
-                            <select id="contact-topic" name="topic">
-                                <option>Private Banking</option>
-                                <option>Corporate &amp; Institutional Banking</option>
-                                <option>Wealth Management</option>
-                                <option>International Payments</option>
-                                <option>Existing account support</option>
-                                <option>Other</option>
-                            </select>
+                            <label for="contact-topic">Subject</label>
+                           <input type="email" id="contact-email" name="subject" placeholder="Complaint" autocomplete="email" required>
+                            </div>
                         </div>
 
                         <div class="form-field">
                             <label for="contact-message">Message</label>
-                            <textarea id="contact-message" name="message" rows="5" placeholder="Tell us a little about your enquiry&hellip;" required></textarea>
+                            <textarea id="contact-message" name="content" rows="5" placeholder="Tell us a little about your enquiry&hellip;" required></textarea>
                         </div>
 
                         <div class="form-check">
