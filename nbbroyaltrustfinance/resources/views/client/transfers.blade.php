@@ -74,7 +74,7 @@
 
                 <div class="form-group">
                     <label for="from_account_external" class="form-label">From Account</label>
-                    <select name="from_account_id" id="from_account_external" class="form-control" required>
+                    <select name="from_account_id" id="from_account_external" class="form-control">
                         <option value="" disabled selected>
                            Wallet Balance(£) {{ Auth::user()->userwallet->balance }}
                         </option>
