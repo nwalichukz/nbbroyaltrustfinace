@@ -353,6 +353,7 @@ Route::view('/client/transfers', 'client.transfers');
 Route::view('/client/international-payments', 'client.international-payments');
 Route::view('/client/beneficiaries', 'client.beneficiaries');
 Route::view('/client/cards', 'client.cards');
+Route::view('/client/setpin', 'client.setpin');
 Route::view('/client/statements', 'client.statements');
 
 Route::view('/client/profile', 'client.profile');

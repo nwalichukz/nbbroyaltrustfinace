@@ -108,10 +108,10 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                     Profile &amp; Security
                 </a>
-                {{--<a href="{{ url('client/support') ?? url('/client/support') }}" @if(($activeNav ?? '') === 'support') aria-current="page" @endif>
+                <a href="{{ url('client/setpin') }}" @if(($activeNav ?? '') === 'support') aria-current="page" @endif>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.7-2.5 2-2.5 3.5M12 17h.01"/></svg>
-                    Help Centre
-                </a>--}}
+                    Set Pin
+                </a>
             </nav>
 
             <div class="db-sidebar__foot">
