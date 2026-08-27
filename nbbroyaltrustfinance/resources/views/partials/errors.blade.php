@@ -22,6 +22,15 @@
             </div>
         </div>
     </div>
+@elseif (session()->has('status'))
+    <div class="row justify-content-center my-3">
+        <div class="col-md-6">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Success!</strong> {{ session('status') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 @elseif (session()->has('error'))
     <div class="row justify-content-center my-3">
         <div class="col-md-6">

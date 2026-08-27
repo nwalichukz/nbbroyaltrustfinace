@@ -1,99 +1,317 @@
-<?php
+@extends('layouts.client')
+@php($activeNav = 'transfers')
+@section('title', 'Send Money | Nbb Trust Kapital')
 
-namespace App\Services;
+ 
+    @section('content')
+    <div class="db-page-head">
+        <div>
+            <div class="breadcrumb"><a href="{{ url('/client/dashboard') }}">Client Area</a> <span>/</span> <span>Send Money</span></div>
+            <h1>Send Money</h1>
+            <p class="lede">Transfer funds instantly between your accounts or to an external bank.</p>
+        </div>
+    </div>
 
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
+    <div class="transfer-grid">
+        <!-- Main Form Card -->
+        <div class="db-card">
+            <form action="{{ url('/client/transfers') }}" method="POST" id="transferForm">
+                @csrf
 
-class KuritrMailService
-{
-    public static $token = "Zoho-enczapikey wSsVR61+8xDyB659z2GlcbttnQkHAFP/ERt/3FT0vX+tHKzDpcc+wkDPDAGkGPkfRGc9EGEWrbksmxhShmcPhtgrzFAHWyiF9mqRe1U4J3x17qnvhDzDXmlblheKLosBxQ5immJjE84r+g==";
-    public static $url = "https://api.zeptomail.com/v1.1/email";
-    public static $from = "hello@kuritr.com";
-    public static $from_name = "Kuritr";
+                <!-- Transfer Type Selector -->
+                <div class="form-group">
+                    <label class="form-label">Transfer Type</label>
+                    <div class="transfer-type-toggle">
+                        <label class="type-option">
+                            <input type="radio" name="transfer_type" value="internal" checked onchange="toggleTransferType('internal')">
+                            <span>Own Accounts</span>
+                        </label>
+                        <label class="type-option">
+                            <input type="radio" name="transfer_type" value="external" onchange="toggleTransferType('external')">
+                            <span>Other Bank Account</span>
+                        </label>
+                    </div>
+                </div>
 
-    /**
-     * Send a branded Kuritr email. Fires and forgets — logs failures internally,
-     * does not return anything for the caller to check.
-     *
-     * Usage:
-     * KuritrMailService::notify('chukznwali@gmail.com', 'Chukwuma', 'Wallet Funded', 'Your wallet has been credited with ₦5,000.');
-     */
-    public static function notify(string $to, string $name, string $subject, string $message): void
-    {
-        self::send($to, $name, $subject, $message);
-    }
+                <!-- From Account -->
+                <div class="form-group">
+                    <label for="from_account" class="form-label">From Account</label>
+                    <select name="from_account_id" id="from_account" class="form-control" required>
+                        <option value="" disabled selected>Select Source Account</option>
+                        @isset($accounts)
+                            @foreach($accounts as $account)
+                                <option value="{{ $account->id }}">
+                                    {{ $account->account_type }} (****{{ substr($account->account_number, -4) }}) — ${{ number_format($account->balance, 2) }}
+                                </option>
+                            @endforeach
+                        @endisset
+                    </select>
+                </div>
 
-    public static function send(string $to, string $name, string $subject, string $message): void
-    {
-        $html = self::buildHtml($subject, $name, $message);
+                <!-- External Fields (Hidden by default) -->
+                <div id="externalFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="bank_name" class="form-label">Recipient Bank</label>
+                        <input type="text" name="bank_name" id="bank_name" class="form-control" placeholder="Enter bank name or SWIFT/BIC">
+                    </div>
 
-        try {
-            Http::withHeaders([
-                'Authorization' => self::$token,
-                'Content-Type' => 'application/json',
-            ])->post(self::$url, [
-                'from' => [
-                    'address' => self::$from,
-                    'name' => self::$from_name,
-                ],
-                'to' => [[
-                    'email_address' => ['address' => $to, 'name' => $name],
-                ]],
-                'subject' => $subject,
-                'htmlbody' => $html,
-            ])->throw();
+                    <div class="form-group">
+                        <label for="account_number" class="form-label">Account Number / IBAN</label>
+                        <input type="text" name="account_number" id="account_number" class="form-control" placeholder="e.g. 1234567890">
+                    </div>
 
-        } catch (\Throwable $e) {
-            Log::error('Kuritr mail send failed: ' . $e->getMessage());
+                    <div class="form-group">
+                        <label for="recipient_name" class="form-label">Beneficiary Name</label>
+                        <input type="text" name="recipient_name" id="recipient_name" class="form-control" placeholder="Full name of account holder">
+                    </div>
+                </div>
+
+                <!-- Internal Transfer Destination (Visible by default) -->
+                <div id="internalFields">
+                    <div class="form-group">
+                        <label for="to_account" class="form-label">To Account</label>
+                        <select name="to_account_id" id="to_account" class="form-control">
+                            <option value="" disabled selected>Select Destination Account</option>
+                            @isset($accounts)
+                                @foreach($accounts as $account)
+                                    <option value="{{ $account->id }}">
+                                        {{ $account->account_type }} (****{{ substr($account->account_number, -4) }} )
+                                    </option>
+                                @endforeach
+                            @endisset
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Amount & Reference -->
+                <div class="form-row">
+                    <div class="form-group col-half">
+                        <label for="amount" class="form-label">Amount ($)</label>
+                        <div class="amount-input-wrapper">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" step="0.01" min="1.00" name="amount" id="amount" class="form-control amount-input" placeholder="0.00" required>
+                        </div>
+                    </div>
+                    <div class="form-group col-half">
+                        <label for="reference" class="form-label">Description / Note (Optional)</label>
+                        <input type="text" name="reference" id="reference" class="form-control" placeholder="e.g. Rent, Gift, Payment">
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary-lg">
+                        <span>Continue Transfer</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right Side Panel / Security Notice -->
+        <div class="db-sidebar-panel">
+            <div class="db-card info-card">
+                <h3>Transfer Security</h3>
+                <ul class="info-list">
+                    <li>
+                        <strong>Instant Processing</strong>
+                        <p>Internal transfers are processed immediately 24/7.</p>
+                    </li>
+                    <li>
+                        <strong>Encryption</strong>
+                        <p>All outgoing transactions are protected with 256-bit encryption.</p>
+                    </li>
+                    <li>
+                        <strong>Limits</strong>
+                        <p>Standard daily transfer limit: <strong>$10,000.00</strong></p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Styling & Toggle Script -->
+    <style>
+        :root {
+            --color-brand: #081C33;
+            --color-brand-hover: #0b2545;
+            --color-brand-light: #f0f4f8;
         }
-    }
 
-    private static function buildHtml(string $heading, string $name, string $message): string
-    {
-        $year = date('Y');
+        .transfer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
 
-        return <<<HTML
-        <!DOCTYPE html>
-        <html>
-        <body style="margin:0; padding:0; background-color:#f2f3f5; font-family:Arial, Helvetica, sans-serif;">
-            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f2f3f5; padding:32px 0;">
-                <tr>
-                    <td align="center">
-                        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px; max-width:600px; background-color:#ffffff; border-radius:8px; overflow:hidden;">
-                            <tr>
-                                <td style="background-color:#0b6e4f; padding:28px 40px; text-align:center;">
-                                    <span style="font-size:22px; font-weight:bold; color:#ffffff; letter-spacing:0.5px;">KURITR</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="background-color:#f5a623; height:4px; line-height:4px; font-size:0;">&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td style="padding:40px;">
-                                    <h1 style="margin:0 0 16px 0; font-size:20px; color:#0b6e4f;">{$heading}</h1>
-                                    <p style="margin:0 0 16px 0; font-size:15px; line-height:1.6; color:#333333;">Hi {$name},</p>
-                                    <p style="margin:0 0 16px 0; font-size:15px; line-height:1.6; color:#333333;">{$message}</p>
-                                    <p style="margin:24px 0 0 0; font-size:15px; line-height:1.6; color:#333333;">
-                                        Regards,<br>
-                                        <strong style="color:#0b6e4f;">The Kuritr Team</strong>
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding:0 40px;"><div style="border-top:1px solid #e5e5e5;"></div></td>
-                            </tr>
-                            <tr>
-                                <td style="padding:24px 40px 32px 40px; text-align:center;">
-                                    <p style="margin:0; font-size:12px; color:#999999;">&copy; {$year} Kuritr. All rights reserved.</p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </body>
-        </html>
-        HTML;
-    }
-}
+        @media (max-width: 900px) {
+            .transfer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .transfer-type-toggle {
+            display: flex;
+            gap: 0.75rem;
+            background: var(--color-bg-subtle, #f4f6f8);
+            padding: 0.35rem;
+            border-radius: 8px;
+        }
+
+        .type-option {
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .type-option input {
+            display: none;
+        }
+
+        .type-option span {
+            display: block;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            color: var(--color-ink-soft, #64748b);
+        }
+
+        .type-option input:checked + span {
+            background: var(--color-brand);
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(8, 28, 51, 0.15);
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: var(--color-ink, #1e293b);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--color-border, #cbd5e1);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #ffffff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-brand);
+            box-shadow: 0 0 0 3px rgba(8, 28, 51, 0.12);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .col-half {
+            flex: 1;
+        }
+
+        .amount-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 1rem;
+            font-weight: 600;
+            color: var(--color-brand);
+        }
+
+        .amount-input {
+            padding-left: 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary-lg {
+            width: 100%;
+            padding: 0.85rem 1.5rem;
+            background: var(--color-brand);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-primary-lg:hover {
+            background: var(--color-brand-hover);
+        }
+
+        .btn-primary-lg:active {
+            transform: translateY(1px);
+        }
+
+        .info-card {
+            background: var(--color-brand-light);
+            border: 1px solid rgba(8, 28, 51, 0.1);
+        }
+
+        .info-card h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--color-brand);
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-list li {
+            margin-bottom: 1rem;
+        }
+
+        .info-list strong {
+            font-size: 0.85rem;
+            color: var(--color-brand);
+        }
+
+        .info-list p {
+            font-size: 0.8rem;
+            color: #475569;
+            margin: 0.2rem 0 0 0;
+        }
+    </style>
+
+    <script>
+        function toggleTransferType(type) {
+            const externalFields = document.getElementById('externalFields');
+            const internalFields = document.getElementById('internalFields');
+
+            if (type === 'external') {
+                externalFields.style.display = 'block';
+                internalFields.style.display = 'none';
+            } else {
+                externalFields.style.display = 'none';
+                internalFields.style.display = 'block';
+            }
+        }
+    </script>
+@endsection
