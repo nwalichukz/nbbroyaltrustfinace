@@ -360,7 +360,7 @@ class UserWalletController extends Controller
                 $credit = UserWallet::where('wallet_no', $request['receiver_wallet_no'])->with(['user'])->lockForUpdate()->first();
                 $debit = UserWallet::where('user_id',   $sender_id)->with(['user'])->lockForUpdate()->first();
                
-                DB::transaction(function() use ($request, $credit, $debit){
+                DB::transaction(function() use ($request, $credit, $debit,  $sender_id){
                     if($debit->balance >= $request['amount']){
                         $debit->balance = $debit->balance - $request['amount'];
                         $debit->save();
