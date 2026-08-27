@@ -88,14 +88,14 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
                     Send Money
                 </a>
-                <a href="{{ url('/client/international-payments') ?? url('/client/international-payments') }}" @if(($activeNav ?? '') === 'international') aria-current="page" @endif>
+                {{--<a href="{{ url('/client/international-payments') ?? url('/client/international-payments') }}" @if(($activeNav ?? '') === 'international') aria-current="page" @endif>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12h20M12 2c2.5 3 4 7 4 10s-1.5 7-4 10c-2.5-3-4-7-4-10s1.5-7 4-10z"/></svg>
                     International Payments
                 </a>
                 <a href="{{ url('client/beneficiaries') ?? url('/client/beneficiaries') }}" @if(($activeNav ?? '') === 'beneficiaries') aria-current="page" @endif>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 8h4M18 6v4"/></svg>
                     Beneficiaries
-                </a>
+                </a>--}}
 
                 <span class="db-nav__label">Cards</span>
                 <a href="{{ url('client/cards') ?? url('/client/cards') }}" @if(($activeNav ?? '') === 'cards') aria-current="page" @endif>
