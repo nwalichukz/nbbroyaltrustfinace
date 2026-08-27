@@ -69,7 +69,7 @@
             </form>
 
             <!-- ===================== EXTERNAL TRANSFER FORM ===================== -->
-            <form action="{{ url('/client/transfers/external') }}" method="POST" id="externalTransferForm" class="transfer-form" style="display:none;">
+            <form action="{{ url('/user/external-transfer') }}" method="POST" id="externalTransferForm" class="transfer-form" style="display:none;">
                 @csrf
 
                 <div class="form-group">
@@ -85,6 +85,7 @@
                     <label for="bank_name" class="form-label">Recipient Bank</label>
                     <input type="text" name="bank_name" id="bank_name" class="form-control" placeholder="Enter bank name or SWIFT/BIC" required>
                 </div>
+                <input type="hidden" name="sender_user_id" value="{{Auth::user()->id}}">
 
                 <div class="form-group">
                     <label for="account_number" class="form-label">Account Number / IBAN</label>
@@ -93,7 +94,7 @@
 
                 <div class="form-group">
                     <label for="recipient_name" class="form-label">Beneficiary Name</label>
-                    <input type="text" name="recipient_name" id="recipient_name" class="form-control" placeholder="Full name of account holder" required>
+                    <input type="text" name="account_name" id="recipient_name" class="form-control" placeholder="Full name of account holder" required>
                 </div>
 
                 <div class="form-row">

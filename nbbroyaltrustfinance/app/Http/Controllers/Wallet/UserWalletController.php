@@ -597,86 +597,77 @@ class UserWalletController extends Controller
     public static function getTotalCurrentBalnce(){
         return UserWallet::where('id', '!=', NULL)->lockForUpdate()->sum('balance');
     }
-
-    /**
+     
+      /**
      *
-     * returns 
+     * reExternal Transfer
      *
      *
      *
      */
-    public static function externalTransfer(Request $request){
-        $validation = Validator::make($request->all(),
-        [
-            "sender_user_id" => "required",
-            "amount"=>"required"
-        ]);
-     // return 345;
-    if($validation->fails()){
+   
+     public static function externalTransfer(Request $request)
+{
+    $validation = Validator::make($request->all(), [
+        "sender_user_id" => "required",
+        "amount" => "required"
+    ]);
+
+    if ($validation->fails()) {
         return redirect()->back()->withErrors($validation);
     }
-  // return $request->all();
-   
-    if(self::checkAmt($request['sender_user_id'], $request['amount'])){
 
-        if(SendOtpController::verifyCodeOnly($request['sender_user_id'], $request['otp']) == true){
+    if (self::checkAmt($request['sender_user_id'], $request['amount'])) {
 
-        if(Auth::user()->pin == $request['pin']){
-            if(Auth::user()->external_transfer_status == 'active'){
-        try{
-          //  $credit = UserWallet::where('wallet_no', $request['receiver_wallet_no'])->with(['user'])->lockForUpdate()->first();
-            $debit = UserWallet::where('user_id', $request['sender_user_id'])->with(['user'])->lockForUpdate()->first();
-           
-            DB::transaction(function() use ($request, $debit){
-                if($debit->balance >= $request['amount']){
-                    $debit->balance = $debit->balance - $request['amount'];
-                    $debit->save();
-                    $date_created = $debit->created_at;
-                 $debit_transaction_record = [
-                        'user_id' => $request['sender_user_id'],
-                        'amount' => $request['amount'],
-                        'transaction_type' => 'debit',
-                        'purpose' => 'external transfer '.$request['bank_name'],
-                    ];
-                    UserTransactionHistoryController::save($debit_transaction_record);
-             
-                   
-               }
-            });
-            $email = Auth::user()->email;
-            $title = 'Transfer made successfully';
-            $msg = 'Your Payment of '.' $'.$request['amount'].'  to '.$request['account_name'].' has been successfully Made';
-            Mailer::genericMail($email, $title, $msg);
-            return view('dashboard/src/html/crm/successful-transaction')->with(['msg'=> 'Your Payment of '.' $'.$request['amount'].'  to '.$request['account_name'].' has been successfully Made',
-                                                                                'bank_name'=>$request['bank_name'],
-                                                                                'amount'=>$request['amount'],
-                                                                                'account_name'=>$request['account_name'],
-                                                                                'account_number'=>$request['account_number'],
-                                                                                'id'=>$request['sender_user_id'],
-                                                                                'date_created'=>Carbon::now()]);
-           
-        }catch(Exception $e){
-            return redirect()->back()->with('error', 'Something went wrong transfer could not be completed successfully. Please try again');
+     /*   if (SendOtpController::verifyCodeOnly($request['sender_user_id'], $request['otp']) == true) {
 
-        }
-      }else{
-        return redirect('dashboard/get-external-transfer')->with('error', 'Please contact your account officer');
-      }
-    }else{
-        return redirect('dashboard/get-external-transfer')->with('error', 'Your PIN is incorrect');
+            if (Auth::user()->pin == $request['pin']) {*/
+
+                if (Auth::user()->external_transfer_status == 'active') {
+                    try {
+                        $debit = UserWallet::where('user_id', $request['sender_user_id'])->with(['user'])->lockForUpdate()->first();
+
+                        DB::transaction(function () use ($request, $debit) {
+                            if ($debit->balance >= $request['amount']) {
+                                $debit->balance = $debit->balance - $request['amount'];
+                                $debit->save();
+
+                                $debit_transaction_record = [
+                                    'user_id' => $request['sender_user_id'],
+                                    'amount' => $request['amount'],
+                                    'transaction_type' => 'debit',
+                                    'purpose' => 'external transfer ' . $request['bank_name'],
+                                ];
+                                UserTransactionHistoryController::save($debit_transaction_record);
+                            }
+                        });
+
+                        $email = Auth::user()->email;
+                        $title = 'Transfer made successfully';
+                        $msg = 'Your Payment of £' . $request['amount'] . ' to ' . $request['account_name'] . ' has been successfully Made';
+                       ZeptoMailService::notify($email, Auth::user()->name, $title, $msg);
+
+                       return redirect()->back()->with('success', 'Transaction Completed successfully');
+
+                    } catch (Exception $e) {
+                        return redirect()->back()->with('error', 'Something went wrong transfer could not be completed successfully. Please try again');
+                    }
+                } else {
+                    return redirect()->back()->with('error', 'Please contact your account officer');
+                }
+            /*} else {
+                return redirect('dashboard/get-external-transfer')->with('error', 'Your PIN is incorrect');
+              }
+            } else {
+            return redirect('dashboard/get-external-transfer')->with('error', 'Your OTP is incorrect');
+                     }*/
+    } else {
+        return redirect()->back()->with('error', 'You do not have sufficient balance in your wallet to carry out this transaction');
     }
-}else{
-     return redirect('dashboard/get-external-transfer')->with('error', 'You OTP is incorrect');
 }
 
-    }else{
-        return redirect()->back()->with('error', 'You do not have sufficient balance in your wallet to carry out this transaction'); 
-
-    }
 
 
-
-    }
 
     /**
      *

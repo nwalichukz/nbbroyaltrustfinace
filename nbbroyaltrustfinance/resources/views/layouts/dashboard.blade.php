@@ -154,6 +154,7 @@
             </header>
 
             <main id="db-main-content" class="db-content">
+                @include('partials.errors')
                 @yield('content')
             </main>
         </div>

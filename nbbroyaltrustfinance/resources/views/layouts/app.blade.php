@@ -172,6 +172,7 @@
          Page content — every static page injects here
          ========================================================= --}}
     <main id="main-content">
+        @include('partials.errors')
         @yield('content')
     </main>
 
