@@ -2,7 +2,6 @@
 @php($activeNav = 'transfers')
 @section('title', 'Send Money | Nbb Trust Kapital')
 
- 
     @section('content')
     <div class="db-page-head">
         <div>
@@ -15,90 +14,111 @@
     <div class="transfer-grid">
         <!-- Main Form Card -->
         <div class="db-card">
-            <form action="{{ url('/client/transfers') }}" method="POST" id="transferForm">
+
+            <!-- Transfer Type Selector — controls which form below is shown -->
+            <div class="form-group">
+                <label class="form-label">Transfer Type</label>
+                <div class="transfer-type-toggle">
+                    <button type="button" class="type-option active" id="btnInternal" onclick="toggleTransferType('internal')">
+                        <span>NbbTrust Bank</span>
+                    </button>
+                    <button type="button" class="type-option" id="btnExternal" onclick="toggleTransferType('external')">
+                        <span>Other Bank Account</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===================== INTERNAL TRANSFER FORM ===================== -->
+            <form action="{{ url('/client/transfers/internal') }}" method="POST" id="internalTransferForm" class="transfer-form">
                 @csrf
 
-                <!-- Transfer Type Selector -->
                 <div class="form-group">
-                    <label class="form-label">Transfer Type</label>
-                    <div class="transfer-type-toggle">
-                        <label class="type-option">
-                            <input type="radio" name="transfer_type" value="internal" checked onchange="toggleTransferType('internal')">
-                            <span>Own Accounts</span>
-                        </label>
-                        <label class="type-option">
-                            <input type="radio" name="transfer_type" value="external" onchange="toggleTransferType('external')">
-                            <span>Other Bank Account</span>
-                        </label>
-                    </div>
+                    <label for="from_account_internal" class="form-label">From Account</label>
+                    <select name="from_account_id" id="from_account_internal" class="form-control" required>
+                        <option value="" disabled selected>
+                            {{ Auth::user()->userwallet->balance }}
+                        </option>
+                    </select>
                 </div>
 
-                <!-- From Account -->
                 <div class="form-group">
-                    <label for="from_account" class="form-label">From Account</label>
-                    <select name="from_account_id" id="from_account" class="form-control" required>
-                        <option value="" disabled selected>Select Source Account</option>
+                    <label for="to_account" class="form-label">To Account</label>
+                    <select name="to_account_id" id="to_account" class="form-control" required>
+                        <option value="" disabled selected>Select Destination Account</option>
                         @isset($accounts)
                             @foreach($accounts as $account)
                                 <option value="{{ $account->id }}">
-                                    {{ $account->account_type }} (****{{ substr($account->account_number, -4) }}) — ${{ number_format($account->balance, 2) }}
+                                    {{ $account->account_type }} (****{{ substr($account->account_number, -4) }})
                                 </option>
                             @endforeach
                         @endisset
                     </select>
                 </div>
 
-                <!-- External Fields (Hidden by default) -->
-                <div id="externalFields" style="display: none;">
-                    <div class="form-group">
-                        <label for="bank_name" class="form-label">Recipient Bank</label>
-                        <input type="text" name="bank_name" id="bank_name" class="form-control" placeholder="Enter bank name or SWIFT/BIC">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="account_number" class="form-label">Account Number / IBAN</label>
-                        <input type="text" name="account_number" id="account_number" class="form-control" placeholder="e.g. 1234567890">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="recipient_name" class="form-label">Beneficiary Name</label>
-                        <input type="text" name="recipient_name" id="recipient_name" class="form-control" placeholder="Full name of account holder">
-                    </div>
-                </div>
-
-                <!-- Internal Transfer Destination (Visible by default) -->
-                <div id="internalFields">
-                    <div class="form-group">
-                        <label for="to_account" class="form-label">To Account</label>
-                        <select name="to_account_id" id="to_account" class="form-control">
-                            <option value="" disabled selected>Select Destination Account</option>
-                            @isset($accounts)
-                                @foreach($accounts as $account)
-                                    <option value="{{ $account->id }}">
-                                        {{ $account->account_type }} (****{{ substr($account->account_number, -4) }} )
-                                    </option>
-                                @endforeach
-                            @endisset
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Amount & Reference -->
                 <div class="form-row">
                     <div class="form-group col-half">
-                        <label for="amount" class="form-label">Amount ($)</label>
+                        <label for="amount_internal" class="form-label">Amount ($)</label>
                         <div class="amount-input-wrapper">
                             <span class="currency-symbol">$</span>
-                            <input type="number" step="0.01" min="1.00" name="amount" id="amount" class="form-control amount-input" placeholder="0.00" required>
+                            <input type="number" step="0.01" min="1.00" name="amount" id="amount_internal" class="form-control amount-input" placeholder="0.00" required>
                         </div>
                     </div>
                     <div class="form-group col-half">
-                        <label for="reference" class="form-label">Description / Note (Optional)</label>
-                        <input type="text" name="reference" id="reference" class="form-control" placeholder="e.g. Rent, Gift, Payment">
+                        <label for="reference_internal" class="form-label">Description / Note (Optional)</label>
+                        <input type="text" name="reference" id="reference_internal" class="form-control" placeholder="e.g. Rent, Gift, Payment">
                     </div>
                 </div>
 
-                <!-- Action Button -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary-lg">
+                        <span>Continue Transfer</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </button>
+                </div>
+            </form>
+
+            <!-- ===================== EXTERNAL TRANSFER FORM ===================== -->
+            <form action="{{ url('/client/transfers/external') }}" method="POST" id="externalTransferForm" class="transfer-form" style="display:none;">
+                @csrf
+
+                <div class="form-group">
+                    <label for="from_account_external" class="form-label">From Account</label>
+                    <select name="from_account_id" id="from_account_external" class="form-control" required>
+                        <option value="" disabled selected>
+                            {{ Auth::user()->userwallet->balance }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bank_name" class="form-label">Recipient Bank</label>
+                    <input type="text" name="bank_name" id="bank_name" class="form-control" placeholder="Enter bank name or SWIFT/BIC" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="account_number" class="form-label">Account Number / IBAN</label>
+                    <input type="text" name="account_number" id="account_number" class="form-control" placeholder="e.g. 1234567890" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipient_name" class="form-label">Beneficiary Name</label>
+                    <input type="text" name="recipient_name" id="recipient_name" class="form-control" placeholder="Full name of account holder" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-half">
+                        <label for="amount_external" class="form-label">Amount ($)</label>
+                        <div class="amount-input-wrapper">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" step="0.01" min="1.00" name="amount" id="amount_external" class="form-control amount-input" placeholder="0.00" required>
+                        </div>
+                    </div>
+                    <div class="form-group col-half">
+                        <label for="reference_external" class="form-label">Description / Note (Optional)</label>
+                        <input type="text" name="reference" id="reference_external" class="form-control" placeholder="e.g. Rent, Gift, Payment">
+                    </div>
+                </div>
+
                 <div class="form-actions">
                     <button type="submit" class="btn-primary-lg">
                         <span>Continue Transfer</span>
@@ -163,10 +183,9 @@
             flex: 1;
             text-align: center;
             cursor: pointer;
-        }
-
-        .type-option input {
-            display: none;
+            background: none;
+            border: none;
+            padding: 0;
         }
 
         .type-option span {
@@ -179,11 +198,15 @@
             color: var(--color-ink-soft, #64748b);
         }
 
-        .type-option input:checked + span {
+        .type-option.active span {
             background: var(--color-brand);
             color: #ffffff;
             box-shadow: 0 2px 4px rgba(8, 28, 51, 0.15);
             font-weight: 600;
+        }
+
+        .transfer-form {
+            margin-top: 1.25rem;
         }
 
         .form-group {
@@ -302,15 +325,21 @@
 
     <script>
         function toggleTransferType(type) {
-            const externalFields = document.getElementById('externalFields');
-            const internalFields = document.getElementById('internalFields');
+            const internalForm = document.getElementById('internalTransferForm');
+            const externalForm = document.getElementById('externalTransferForm');
+            const btnInternal = document.getElementById('btnInternal');
+            const btnExternal = document.getElementById('btnExternal');
 
             if (type === 'external') {
-                externalFields.style.display = 'block';
-                internalFields.style.display = 'none';
+                externalForm.style.display = 'block';
+                internalForm.style.display = 'none';
+                btnExternal.classList.add('active');
+                btnInternal.classList.remove('active');
             } else {
-                externalFields.style.display = 'none';
-                internalFields.style.display = 'block';
+                externalForm.style.display = 'none';
+                internalForm.style.display = 'block';
+                btnInternal.classList.add('active');
+                btnExternal.classList.remove('active');
             }
         }
     </script>
