@@ -173,7 +173,7 @@
                     Need to update your PIN?
                 </summary>
                 
-                <form action="{{ route('client.pin.update') }}" method="POST" style="margin-top: 1.5rem;">
+                <form action="{{ url('/user/pin/update') }}" method="POST" style="margin-top: 1.5rem;">
                     @csrf
                     @method('PUT')
 
