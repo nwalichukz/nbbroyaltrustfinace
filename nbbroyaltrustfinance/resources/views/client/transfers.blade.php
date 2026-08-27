@@ -36,30 +36,21 @@
                     <label for="from_account_internal" class="form-label">From Account</label>
                     <select name="from_account_id" id="from_account_internal" class="form-control" required>
                         <option value="" disabled selected>
-                            {{ Auth::user()->userwallet->balance }}
+                            Wallet Balance(£){{ Auth::user()->userwallet->balance }}
                         </option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="to_account" class="form-label">To Account</label>
-                    <select name="to_account_id" id="to_account" class="form-control" required>
-                        <option value="" disabled selected>Select Destination Account</option>
-                        @isset($accounts)
-                            @foreach($accounts as $account)
-                                <option value="{{ $account->id }}">
-                                    {{ $account->account_type }} (****{{ substr($account->account_number, -4) }})
-                                </option>
-                            @endforeach
-                        @endisset
-                    </select>
+                    <input type="number" name="receiver_wallet_no" id="amount_internal" class="form-control amount-input" placeholder="00007876866" required>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-half">
-                        <label for="amount_internal" class="form-label">Amount ($)</label>
+                        <label for="amount_internal" class="form-label">Amount (£)</label>
                         <div class="amount-input-wrapper">
-                            <span class="currency-symbol">$</span>
+                            <span class="currency-symbol">£</span>
                             <input type="number" step="0.01" min="1.00" name="amount" id="amount_internal" class="form-control amount-input" placeholder="0.00" required>
                         </div>
                     </div>
@@ -85,7 +76,7 @@
                     <label for="from_account_external" class="form-label">From Account</label>
                     <select name="from_account_id" id="from_account_external" class="form-control" required>
                         <option value="" disabled selected>
-                            {{ Auth::user()->userwallet->balance }}
+                           Wallet Balance(£) {{ Auth::user()->userwallet->balance }}
                         </option>
                     </select>
                 </div>
