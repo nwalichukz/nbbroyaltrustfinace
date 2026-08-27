@@ -122,6 +122,7 @@ Route::get('/get-reset', function () {
 
 Route::view('/about', 'about');
 Route::view('/contact', 'contact');
+Route::view('/support', 'support');
 Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
 
 Route::view('/login', 'login')->name('login'); 
@@ -135,6 +136,8 @@ Route::post('/update-user', [UserController::class, 'update']);
 Route::any('/admin/search-user', [UserController::class, 'searchUser']);
 Route::post('/user/pin/create', [UserController::class, 'setPin']);
 Route::post('/post-reset-password', [Mailer::class, 'postResetPassword']);
+
+Route::post('/post-support', [Mailer::class, 'sendContact']);
 
 Route::get('/receipt/{banK_name}/{account_name}/{account_number}/{amount}/{date}', [UserWalletController::class, 'generateReceipt']);
 

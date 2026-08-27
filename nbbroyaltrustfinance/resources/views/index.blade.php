@@ -227,7 +227,10 @@
 
             <div class="grid grid--insights">
                 <article class="insight-card">
-                    <div class="insight-card__media"><span class="insight-card__tag">Markets</span></div>
+                    <div class="insight-card__media">
+                        <img src="{{ asset('images/insights/insight-markets.jpg') }}" alt="Analyst reviewing market data and charts" style="width:100%; height:100%; object-fit:cover;">
+                        <span class="insight-card__tag">Markets</span>
+                    </div>
                     <div class="insight-card__body">
                         <h3>Navigating currency risk in cross-border trade</h3>
                         <p>A practical framework for corporates managing exposure across multiple markets.</p>
@@ -235,7 +238,10 @@
                     </div>
                 </article>
                 <article class="insight-card">
-                    <div class="insight-card__media"><span class="insight-card__tag">Wealth</span></div>
+                    <div class="insight-card__media">
+                        <img src="{{ asset('images/insights/insight-wealth.jpg') }}" alt="Advisors discussing a client portfolio" style="width:100%; height:100%; object-fit:cover;">
+                        <span class="insight-card__tag">Wealth</span>
+                    </div>
                     <div class="insight-card__body">
                         <h3>Succession planning for international families</h3>
                         <p>What multi-jurisdiction families should consider when structuring an estate.</p>
@@ -243,7 +249,10 @@
                     </div>
                 </article>
                 <article class="insight-card">
-                    <div class="insight-card__media"><span class="insight-card__tag">Regulation</span></div>
+                    <div class="insight-card__media">
+                        <img src="{{ asset('images/insights/insight-regulation.jpg') }}" alt="Team discussing regulatory briefing in a meeting room" style="width:100%; height:100%; object-fit:cover;">
+                        <span class="insight-card__tag">Regulation</span>
+                    </div>
                     <div class="insight-card__body">
                         <h3>What UK regulatory change means for private clients</h3>
                         <p>A plain-English briefing on recent developments and what to expect next.</p>
@@ -268,5 +277,5 @@
             </div>
         </div>
     </section>
- 
+
 @endsection
