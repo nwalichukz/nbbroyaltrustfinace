@@ -29,14 +29,14 @@
             </div>
 
             <!-- ===================== INTERNAL TRANSFER FORM ===================== -->
-            <form action="{{ url('/client/transfers/internal') }}" method="POST" id="internalTransferForm" class="transfer-form">
+            <form action="{{ url('/user/internal-transfer/create') }}" method="POST" id="internalTransferForm" class="transfer-form">
                 @csrf
 
                 <div class="form-group">
                     <label for="from_account_internal" class="form-label">From Account</label>
                     <select name="from_account_id" id="from_account_internal" class="form-control" required>
                         <option value="" disabled selected>
-                            Wallet Balance(£){{ Auth::user()->userwallet->balance }}
+                            Wallet Balance(£) {{ Auth::user()->userwallet->balance }}
                         </option>
                     </select>
                 </div>
