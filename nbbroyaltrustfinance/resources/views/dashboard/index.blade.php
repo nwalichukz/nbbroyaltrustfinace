@@ -33,7 +33,7 @@
                 <span class="stat-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg></span>
                 <span class="stat-card__trend up"> </span>
             </div>
-            <div class="stat-card__value">{{$totalWallet}}</div>
+            <div class="stat-card__value">£{{number_format($totalWallet)}}</div>
             <div class="stat-card__label">Total client balances</div>
         </div>
 
@@ -154,7 +154,7 @@
                             </td>
                             <td class="cell-mono">NBB-TX-{{ $row['id'] }}</td>
                             <td>{{ $row['transaction_type'] }}</td>
-                            <td class="cell-mono">{{ $row['amount'] }}</td>
+                            <td class="cell-mono">{{ number_format($row['amount']) }}</td>
                             <td><span class="status-pill status-pill--{{ $row['status'] }}">{{ $row['status'] }}</span></td>
                             <td>{{ $row->created_at->format('d M Y') }}</td>
                         </tr>
