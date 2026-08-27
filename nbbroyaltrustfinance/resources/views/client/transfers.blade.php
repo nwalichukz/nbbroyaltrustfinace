@@ -2,342 +2,497 @@
 @php($activeNav = 'transfers')
 @section('title', 'Send Money | Nbb Trust Kapital')
 
-    @section('content')
-    <div class="db-page-head">
-        <div>
-            <div class="breadcrumb"><a href="{{ url('/client/dashboard') }}">Client Area</a> <span>/</span> <span>Send Money</span></div>
-            <h1>Send Money</h1>
-            <p class="lede">Transfer funds instantly between your accounts or to an external bank.</p>
-        </div>
+@section('content')
+<div class="db-page-head">
+    <div>
+        <div class="breadcrumb"><a href="{{ url('/client/dashboard') }}">Client Area</a> <span>/</span> <span>Send Money</span></div>
+        <h1>Send Money</h1>
+        <p class="lede">Transfer funds instantly between your accounts or to an external bank.</p>
     </div>
+</div>
 
-    <div class="transfer-grid">
-        <!-- Main Form Card -->
-        <div class="db-card">
+<div class="transfer-grid">
+    <!-- Main Form Card -->
+    <div class="db-card">
 
-            <!-- Transfer Type Selector — controls which form below is shown -->
+        <!-- Transfer Type Selector -->
+        <div class="form-group">
+            <label class="form-label">Transfer Type</label>
+            <div class="transfer-type-toggle">
+                <button type="button" class="type-option active" id="btnInternal" onclick="toggleTransferType('internal')">
+                    <span>NbbTrust Bank</span>
+                </button>
+                <button type="button" class="type-option" id="btnExternal" onclick="toggleTransferType('external')">
+                    <span>Other Bank Account</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ===================== INTERNAL TRANSFER FORM ===================== -->
+        <form action="{{ url('/user/internal-transfer/create') }}" method="POST" id="internalTransferForm" class="transfer-form" onsubmit="promptPin(event, 'internalTransferForm')">
+            @csrf
+            <input type="hidden" name="pin" id="internal_pin_input">
+
             <div class="form-group">
-                <label class="form-label">Transfer Type</label>
-                <div class="transfer-type-toggle">
-                    <button type="button" class="type-option active" id="btnInternal" onclick="toggleTransferType('internal')">
-                        <span>NbbTrust Bank</span>
-                    </button>
-                    <button type="button" class="type-option" id="btnExternal" onclick="toggleTransferType('external')">
-                        <span>Other Bank Account</span>
-                    </button>
+                <label for="from_account_internal" class="form-label">From Account</label>
+                <select name="from_account_id" id="from_account_internal" class="form-control">
+                    <option value="" disabled selected>
+                        Wallet Balance(£) {{ Auth::user()->userwallet->balance }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="receiver_wallet_no" class="form-label">To Account</label>
+                <input type="number" name="receiver_wallet_no" id="receiver_wallet_no" class="form-control amount-input" placeholder="00007876866" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-half">
+                    <label for="amount_internal" class="form-label">Amount (£)</label>
+                    <div class="amount-input-wrapper">
+                        <span class="currency-symbol">£</span>
+                        <input type="number" step="0.01" min="1.00" name="amount" id="amount_internal" class="form-control amount-input" placeholder="0.00" required>
+                    </div>
+                </div>
+                <div class="form-group col-half">
+                    <label for="reference_internal" class="form-label">Description / Note (Optional)</label>
+                    <input type="text" name="reference" id="reference_internal" class="form-control" placeholder="e.g. Rent, Gift, Payment">
                 </div>
             </div>
 
-            <!-- ===================== INTERNAL TRANSFER FORM ===================== -->
-            <form action="{{ url('/user/internal-transfer/create') }}" method="POST" id="internalTransferForm" class="transfer-form">
-                @csrf
-
-                <div class="form-group">
-                    <label for="from_account_internal" class="form-label">From Account</label>
-                    <select name="from_account_id" id="from_account_internal" class="form-control">
-                        <option value="" disabled selected>
-                            Wallet Balance(£) {{ Auth::user()->userwallet->balance }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="to_account" class="form-label">To Account</label>
-                    <input type="number" name="receiver_wallet_no" id="amount_internal" class="form-control amount-input" placeholder="00007876866" required>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-half">
-                        <label for="amount_internal" class="form-label">Amount (£)</label>
-                        <div class="amount-input-wrapper">
-                            <span class="currency-symbol">£</span>
-                            <input type="number" step="0.01" min="1.00" name="amount" id="amount_internal" class="form-control amount-input" placeholder="0.00" required>
-                        </div>
-                    </div>
-                    <div class="form-group col-half">
-                        <label for="reference_internal" class="form-label">Description / Note (Optional)</label>
-                        <input type="text" name="reference" id="reference_internal" class="form-control" placeholder="e.g. Rent, Gift, Payment">
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn-primary-lg">
-                        <span>Continue Transfer</span>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </button>
-                </div>
-            </form>
-
-            <!-- ===================== EXTERNAL TRANSFER FORM ===================== -->
-            <form action="{{ url('/user/external-transfer') }}" method="POST" id="externalTransferForm" class="transfer-form" style="display:none;">
-                @csrf
-
-                <div class="form-group">
-                    <label for="from_account_external" class="form-label">From Account</label>
-                    <select name="from_account_id" id="from_account_external" class="form-control">
-                        <option value="" disabled selected>
-                           Wallet Balance(£) {{ Auth::user()->userwallet->balance }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="bank_name" class="form-label">Recipient Bank</label>
-                    <input type="text" name="bank_name" id="bank_name" class="form-control" placeholder="Enter bank name or SWIFT/BIC" required>
-                </div>
-                <input type="hidden" name="sender_user_id" value="{{Auth::user()->id}}">
-
-                <div class="form-group">
-                    <label for="account_number" class="form-label">Account Number / IBAN</label>
-                    <input type="text" name="account_number" id="account_number" class="form-control" placeholder="e.g. 1234567890" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="recipient_name" class="form-label">Beneficiary Name</label>
-                    <input type="text" name="account_name" id="recipient_name" class="form-control" placeholder="Full name of account holder" required>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-half">
-                        <label for="amount_external" class="form-label">Amount ($)</label>
-                        <div class="amount-input-wrapper">
-                            <span class="currency-symbol">$</span>
-                            <input type="number" step="0.01" min="1.00" name="amount" id="amount_external" class="form-control amount-input" placeholder="0.00" required>
-                        </div>
-                    </div>
-                    <div class="form-group col-half">
-                        <label for="reference_external" class="form-label">Description / Note (Optional)</label>
-                        <input type="text" name="reference" id="reference_external" class="form-control" placeholder="e.g. Rent, Gift, Payment">
-                    </div>
-                </div>
-
-                 <div class="form-group">
-                    <label for="recipient_name" class="form-label">Home Address</label>
-                    <input type="text" name="home_address" id="recipient_name" class="form-control" placeholder="12 Hillview Way, Silicon Valley, California" required>
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn-primary-lg">
-                        <span>Continue Transfer</span>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Right Side Panel / Security Notice -->
-        <div class="db-sidebar-panel">
-            <div class="db-card info-card">
-                <h3>Transfer Security</h3>
-                <ul class="info-list">
-                    <li>
-                        <strong>Instant Processing</strong>
-                        <p>Internal transfers are processed immediately 24/7.</p>
-                    </li>
-                    <li>
-                        <strong>Encryption</strong>
-                        <p>All outgoing transactions are protected with 256-bit encryption.</p>
-                    </li>
-                    <li>
-                        <strong>Limits</strong>
-                        <p>Standard daily transfer limit: <strong>$10,000.00</strong></p>
-                    </li>
-                </ul>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary-lg">
+                    <span>Continue Transfer</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
             </div>
-        </div>
+        </form>
+
+        <!-- ===================== EXTERNAL TRANSFER FORM ===================== -->
+        <form action="{{ url('/user/external-transfer') }}" method="POST" id="externalTransferForm" class="transfer-form" style="display:none;" onsubmit="promptPin(event, 'externalTransferForm')">
+            @csrf
+            <input type="hidden" name="pin" id="external_pin_input">
+
+            <div class="form-group">
+                <label for="from_account_external" class="form-label">From Account</label>
+                <select name="from_account_id" id="from_account_external" class="form-control">
+                    <option value="" disabled selected>
+                       Wallet Balance(£) {{ Auth::user()->userwallet->balance }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="bank_name" class="form-label">Recipient Bank</label>
+                <input type="text" name="bank_name" id="bank_name" class="form-control" placeholder="Enter bank name or SWIFT/BIC" required>
+            </div>
+            <input type="hidden" name="sender_user_id" value="{{Auth::user()->id}}">
+
+            <div class="form-group">
+                <label for="account_number" class="form-label">Account Number / IBAN</label>
+                <input type="text" name="account_number" id="account_number" class="form-control" placeholder="e.g. 1234567890" required>
+            </div>
+
+            <div class="form-group">
+                <label for="recipient_name" class="form-label">Beneficiary Name</label>
+                <input type="text" name="account_name" id="recipient_name" class="form-control" placeholder="Full name of account holder" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-half">
+                    <label for="amount_external" class="form-label">Amount ($)</label>
+                    <div class="amount-input-wrapper">
+                        <span class="currency-symbol">$</span>
+                        <input type="number" step="0.01" min="1.00" name="amount" id="amount_external" class="form-control amount-input" placeholder="0.00" required>
+                    </div>
+                </div>
+                <div class="form-group col-half">
+                    <label for="reference_external" class="form-label">Description / Note (Optional)</label>
+                    <input type="text" name="reference" id="reference_external" class="form-control" placeholder="e.g. Rent, Gift, Payment">
+                </div>
+            </div>
+
+             <div class="form-group">
+                <label for="home_address" class="form-label">Home Address</label>
+                <input type="text" name="home_address" id="home_address" class="form-control" placeholder="12 Hillview Way, Silicon Valley, California" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary-lg">
+                    <span>Continue Transfer</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+        </form>
     </div>
 
-    <!-- Styling & Toggle Script -->
-    <style>
-        :root {
-            --color-brand: #081C33;
-            --color-brand-hover: #0b2545;
-            --color-brand-light: #f0f4f8;
-        }
+    <!-- Right Side Panel / Security Notice -->
+    <div class="db-sidebar-panel">
+        <div class="db-card info-card">
+            <h3>Transfer Security</h3>
+            <ul class="info-list">
+                <li>
+                    <strong>Instant Processing</strong>
+                    <p>Internal transfers are processed immediately 24/7.</p>
+                </li>
+                <li>
+                    <strong>Encryption</strong>
+                    <p>All outgoing transactions are protected with 256-bit encryption.</p>
+                </li>
+                <li>
+                    <strong>Limits</strong>
+                    <p>Standard daily transfer limit: <strong>$10,000.00</strong></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
+<!-- ===================== SECURITY TRANSACTION PIN MODAL ===================== -->
+<div id="pinModal" class="pin-modal-backdrop">
+    <div class="pin-modal-card">
+        <button type="button" class="pin-modal-close" onclick="closePinModal()">&times;</button>
+        <div class="pin-modal-header">
+            <div class="pin-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            </div>
+            <h3>Authorize Transfer</h3>
+            <p>Enter your 4-digit transaction PIN to confirm this transaction.</p>
+        </div>
+
+        <div class="pin-modal-body">
+            <div class="pin-field-group">
+                <input type="password" id="modalPinInput" maxlength="4" pattern="[0-9]*" inputmode="numeric" placeholder="••••" autocomplete="off" autofocus>
+            </div>
+            <div id="pinErrorMessage" class="pin-error-text" style="display: none;">
+                Please enter a valid 4-digit numeric PIN.
+            </div>
+            <button type="button" class="btn-primary-lg" onclick="confirmAndSubmit()">Confirm &amp; Send</button>
+        </div>
+    </div>
+</div>
+
+<!-- Styling & Script -->
+<style>
+    :root {
+        --color-brand: #081C33;
+        --color-brand-hover: #0b2545;
+        --color-brand-light: #f0f4f8;
+    }
+
+    .transfer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    @media (max-width: 900px) {
         .transfer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
-            align-items: start;
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .transfer-type-toggle {
+        display: flex;
+        gap: 0.75rem;
+        background: var(--color-bg-subtle, #f4f6f8);
+        padding: 0.35rem;
+        border-radius: 8px;
+    }
+
+    .type-option {
+        flex: 1;
+        text-align: center;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0;
+    }
+
+    .type-option span {
+        display: block;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        color: var(--color-ink-soft, #64748b);
+    }
+
+    .type-option.active span {
+        background: var(--color-brand);
+        color: #ffffff;
+        box-shadow: 0 2px 4px rgba(8, 28, 51, 0.15);
+        font-weight: 600;
+    }
+
+    .transfer-form {
+        margin-top: 1.25rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+        color: var(--color-ink, #1e293b);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--color-border, #cbd5e1);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        background: #ffffff;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--color-brand);
+        box-shadow: 0 0 0 3px rgba(8, 28, 51, 0.12);
+    }
+
+    .form-row {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .col-half {
+        flex: 1;
+    }
+
+    .amount-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .currency-symbol {
+        position: absolute;
+        left: 1rem;
+        font-weight: 600;
+        color: var(--color-brand);
+    }
+
+    .amount-input {
+        padding-left: 2rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .btn-primary-lg {
+        width: 100%;
+        padding: 0.85rem 1.5rem;
+        background: var(--color-brand);
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-primary-lg:hover {
+        background: var(--color-brand-hover);
+    }
+
+    .btn-primary-lg:active {
+        transform: translateY(1px);
+    }
+
+    .info-card {
+        background: var(--color-brand-light);
+        border: 1px solid rgba(8, 28, 51, 0.1);
+    }
+
+    .info-card h3 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        color: var(--color-brand);
+    }
+
+    .info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .info-list li {
+        margin-bottom: 1rem;
+    }
+
+    .info-list strong {
+        font-size: 0.85rem;
+        color: var(--color-brand);
+    }
+
+    .info-list p {
+        font-size: 0.8rem;
+        color: #475569;
+        margin: 0.2rem 0 0 0;
+    }
+
+    /* Modal Styling */
+    .pin-modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(8, 28, 51, 0.55);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .pin-modal-card {
+        background: #ffffff;
+        width: 100%;
+        max-width: 420px;
+        padding: 2rem;
+        border-radius: 12px;
+        position: relative;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .pin-modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1.25rem;
+        background: transparent;
+        border: none;
+        font-size: 1.5rem;
+        color: #64748b;
+        cursor: pointer;
+    }
+
+    .pin-modal-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .pin-icon {
+        width: 48px;
+        height: 48px;
+        background: var(--color-brand-light);
+        color: var(--color-brand);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .pin-modal-header h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.25rem;
+        color: var(--color-brand);
+    }
+
+    .pin-modal-header p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+
+    .pin-field-group {
+        margin-bottom: 1rem;
+    }
+
+    .pin-field-group input {
+        width: 100%;
+        text-align: center;
+        letter-spacing: 0.75rem;
+        font-size: 1.5rem;
+        font-family: monospace;
+        padding: 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+    }
+
+    .pin-field-group input:focus {
+        outline: none;
+        border-color: var(--color-brand);
+        box-shadow: 0 0 0 3px rgba(8, 28, 51, 0.12);
+    }
+
+    .pin-error-text {
+        color: #dc2626;
+        font-size: 0.8rem;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<script>
+    let activeFormId = null;
+
+    function toggleTransferType(type) {
+        const internalForm = document.getElementById('internalTransferForm');
+        const externalForm = document.getElementById('externalTransferForm');
+        const btnInternal = document.getElementById('btnInternal');
+        const btnExternal = document.getElementById('btnExternal');
+
+        if (type === 'external') {
+            externalForm.style.display = 'block';
+            internalForm.style.display = 'none';
+            btnExternal.classList.add('active');
+            btnInternal.classList.remove('active');
+        } else {
+            externalForm.style.display = 'none';
+            internalForm.style.display = 'block';
+            btnInternal.classList.add('active');
+            btnExternal.classList.remove('active');
+        }
+    }
+
+    function promptPin(event, formId) {
+        event.preventDefault();
+        activeFormId = formId;
+        document.getElementById('modalPinInput').value = '';
+        document.getElementById('pinErrorMessage').style.display = 'none';
+        document.getElementById('pinModal').style.display = 'flex';
+        document.getElementById('modalPinInput').focus();
+    }
+
+    function closePinModal() {
+        document.getElementById('pinModal').style.display = 'none';
+        activeFormId = null;
+    }
+
+    function confirmAndSubmit() {
+        const pinValue = document.getElementById('modalPinInput').value;
+        const errContainer = document.getElementById('pinErrorMessage');
+
+        if (!pinValue || pinValue.length !== 4 || isNaN(pinValue)) {
+            errContainer.style.display = 'block';
+            return;
         }
 
-        @media (max-width: 900px) {
-            .transfer-grid {
-                grid-template-columns: 1fr;
-            }
+        if (activeFormId === 'internalTransferForm') {
+            document.getElementById('internal_pin_input').value = pinValue;
+        } else if (activeFormId === 'externalTransferForm') {
+            document.getElementById('external_pin_input').value = pinValue;
         }
 
-        .transfer-type-toggle {
-            display: flex;
-            gap: 0.75rem;
-            background: var(--color-bg-subtle, #f4f6f8);
-            padding: 0.35rem;
-            border-radius: 8px;
-        }
-
-        .type-option {
-            flex: 1;
-            text-align: center;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 0;
-        }
-
-        .type-option span {
-            display: block;
-            padding: 0.6rem 1rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-            color: var(--color-ink-soft, #64748b);
-        }
-
-        .type-option.active span {
-            background: var(--color-brand);
-            color: #ffffff;
-            box-shadow: 0 2px 4px rgba(8, 28, 51, 0.15);
-            font-weight: 600;
-        }
-
-        .transfer-form {
-            margin-top: 1.25rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 0.4rem;
-            color: var(--color-ink, #1e293b);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--color-border, #cbd5e1);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            background: #ffffff;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--color-brand);
-            box-shadow: 0 0 0 3px rgba(8, 28, 51, 0.12);
-        }
-
-        .form-row {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .col-half {
-            flex: 1;
-        }
-
-        .amount-input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .currency-symbol {
-            position: absolute;
-            left: 1rem;
-            font-weight: 600;
-            color: var(--color-brand);
-        }
-
-        .amount-input {
-            padding-left: 2rem;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .btn-primary-lg {
-            width: 100%;
-            padding: 0.85rem 1.5rem;
-            background: var(--color-brand);
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        .btn-primary-lg:hover {
-            background: var(--color-brand-hover);
-        }
-
-        .btn-primary-lg:active {
-            transform: translateY(1px);
-        }
-
-        .info-card {
-            background: var(--color-brand-light);
-            border: 1px solid rgba(8, 28, 51, 0.1);
-        }
-
-        .info-card h3 {
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            color: var(--color-brand);
-        }
-
-        .info-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .info-list li {
-            margin-bottom: 1rem;
-        }
-
-        .info-list strong {
-            font-size: 0.85rem;
-            color: var(--color-brand);
-        }
-
-        .info-list p {
-            font-size: 0.8rem;
-            color: #475569;
-            margin: 0.2rem 0 0 0;
-        }
-    </style>
-
-    <script>
-        function toggleTransferType(type) {
-            const internalForm = document.getElementById('internalTransferForm');
-            const externalForm = document.getElementById('externalTransferForm');
-            const btnInternal = document.getElementById('btnInternal');
-            const btnExternal = document.getElementById('btnExternal');
-
-            if (type === 'external') {
-                externalForm.style.display = 'block';
-                internalForm.style.display = 'none';
-                btnExternal.classList.add('active');
-                btnInternal.classList.remove('active');
-            } else {
-                externalForm.style.display = 'none';
-                internalForm.style.display = 'block';
-                btnInternal.classList.add('active');
-                btnExternal.classList.remove('active');
-            }
-        }
-    </script>
+        const formToSubmit = document.getElementById(activeFormId);
+        document.getElementById('pinModal').style.display = 'none';
+        formToSubmit.submit();
+    }
+</script>
 @endsection
