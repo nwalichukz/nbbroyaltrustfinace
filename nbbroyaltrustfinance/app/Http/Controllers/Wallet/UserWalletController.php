@@ -358,7 +358,7 @@ class UserWalletController extends Controller
                return redirect()->back()->with('error','Something Went Wrong. Transfer could not be completed. Try again later');
             }
 
-            if(empty(Auth::user()->pin)){
+            if(!isset(Auth::user()->pin)){
                 return redirect('client/setpin')->with('error','Please set Your Pin. You cannot perform transfer without a Pin');
 
             }
