@@ -357,7 +357,12 @@ class UserWalletController extends Controller
             if(Auth::user()->external_transfer_status !== 'active'){
                return redirect()->back()->with('error','Something Went Wrong. Transfer could not be completed. Try again later');
             }
-        }
+
+            if(empty(Auth::user()->pin)){
+                return redirect('client/setpin')->with('error','Please set Your Pin. You cannot perform transfer without a Pin');
+
+            }
+        } if(Auth::user()->pin == $request['pin']){
       // return $request->all();
         if($request['receiver_wallet_no'] !== $request['sender_wallet_no']){
         if(self::checkAmt($sender_id, $request['amount'])){
@@ -410,6 +415,12 @@ class UserWalletController extends Controller
     }else{
         return redirect()->back()->with('error', 'You can not make a transfer to yourself'); 
     }
+
+}else{
+     return redirect()->back()->with('error', 'Wrong PIN');  
+}
+
+
 
     }
 
