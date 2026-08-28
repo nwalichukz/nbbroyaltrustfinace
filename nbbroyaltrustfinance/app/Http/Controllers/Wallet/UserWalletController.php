@@ -621,69 +621,61 @@ class UserWalletController extends Controller
 {
     $validation = Validator::make($request->all(), [
         "sender_user_id" => "required",
-        "amount" => "required"
+        "amount"         => "required|numeric|min:1",
+        "pin"            => "required"
     ]);
 
     if ($validation->fails()) {
         return redirect()->back()->withErrors($validation);
     }
-            if(!isset(Auth::user()->pin)){
-                return redirect('client/setpin')->with('error','Please set Your Pin. You cannot perform transfer without a Pin');
 
-                if(!isset(Auth::user()->pin)){ 
-    if (self::checkAmt($request['sender_user_id'], $request['amount'])) {
-
-     /*   if (SendOtpController::verifyCodeOnly($request['sender_user_id'], $request['otp']) == true) {
-
-            if (Auth::user()->pin == $request['pin']) {*/
-
-                if (Auth::user()->external_transfer_status == 'active') {
-                    try {
-                        $debit = UserWallet::where('user_id', $request['sender_user_id'])->with(['user'])->lockForUpdate()->first();
-
-                        DB::transaction(function () use ($request, $debit) {
-                            if ($debit->balance >= $request['amount']) {
-                                $debit->balance = $debit->balance - $request['amount'];
-                                $debit->save();
-
-                                $debit_transaction_record = [
-                                    'user_id' => $request['sender_user_id'],
-                                    'amount' => $request['amount'],
-                                    'transaction_type' => 'debit',
-                                    'purpose' => 'external transfer ' . $request['bank_name'],
-                                ];
-                                UserTransactionHistoryController::save($debit_transaction_record);
-                            }
-                        });
-
-                        $email = Auth::user()->email;
-                        $title = 'Transfer made successfully';
-                        $msg = 'Your Payment of £' . $request['amount'] . ' to ' . $request['account_name'] . ' has been successfully Made';
-                       ZeptoMailService::notify($email, Auth::user()->name, $title, $msg);
-
-                       return redirect()->back()->with('success', 'Transaction Completed successfully');
-
-                    } catch (Exception $e) {
-                        return redirect()->back()->with('error', 'Something went wrong transfer could not be completed successfully. Please try again');
-                    }
-                } else {
-                    return redirect()->back()->with('error', 'Please contact your account officer');
-                }
-            /*} else {
-                return redirect('dashboard/get-external-transfer')->with('error', 'Your PIN is incorrect');
-              }
-            } else {
-            return redirect('dashboard/get-external-transfer')->with('error', 'Your OTP is incorrect');
-                     }*/
-    } else {
-        return redirect()->back()->with('error', 'You do not have sufficient balance in your wallet to carry out this transaction');
+    if (!isset(Auth::user()->pin)) {
+        return redirect('client/setpin')->with('error', 'Please set your PIN. You cannot perform a transfer without a PIN.');
     }
-  }else{
-     return redirect()->back()->with('error', 'Wrong PIN');
-  }
+
+    if (Auth::user()->pin == $request['pin']) { 
+        if (self::checkAmt($request['sender_user_id'], $request['amount'])) {
+
+            if (Auth::user()->external_transfer_status == 'active') {
+                try {
+                    $debit = UserWallet::where('user_id', $request['sender_user_id'])->with(['user'])->lockForUpdate()->first();
+
+                    DB::transaction(function () use ($request, $debit) {
+                        if ($debit->balance >= $request['amount']) {
+                            $debit->balance = $debit->balance - $request['amount'];
+                            $debit->save();
+
+                            $debit_transaction_record = [
+                                'user_id'          => $request['sender_user_id'],
+                                'amount'           => $request['amount'],
+                                'transaction_type' => 'debit',
+                                'purpose'          => 'external transfer ' . $request['bank_name'],
+                            ];
+                            UserTransactionHistoryController::save($debit_transaction_record);
+                        }
+                    });
+
+                    $email = Auth::user()->email;
+                    $title = 'Transfer made successfully';
+                    $msg   = 'Your Payment of £' . $request['amount'] . ' to ' . $request['account_name'] . ' has been successfully made.';
+                    ZeptoMailService::notify($email, Auth::user()->name, $title, $msg);
+
+                    return redirect()->back()->with('success', 'Transaction completed successfully');
+
+                } catch (Exception $e) {
+                    return redirect()->back()->with('error', 'Something went wrong. Transfer could not be completed successfully. Please try again.');
+                }
+            } else {
+                return redirect()->back()->with('error', 'Please contact your account officer.');
+            }
+
+        } else {
+            return redirect()->back()->with('error', 'You do not have sufficient balance in your wallet to carry out this transaction.');
+        }
+    } else {
+        return redirect()->back()->with('error', 'Wrong PIN');
+    }
 }
-
-
 
 
     /**
