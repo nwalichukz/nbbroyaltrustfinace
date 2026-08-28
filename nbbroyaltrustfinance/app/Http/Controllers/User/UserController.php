@@ -660,7 +660,7 @@ public static function changePassword(Request $request){
         if(!empty($user->id)){
           $user->pin = $request['pin'];
           $user->save();
-          $email = Auth::user()->id;
+          $email = Auth::user()->email;
           $name = Auth::user()->name;
           $title = 'Pin Set Successfully';
           $msg = 'Your transfer PIN '.$request['pin'].' was set successfully.';
