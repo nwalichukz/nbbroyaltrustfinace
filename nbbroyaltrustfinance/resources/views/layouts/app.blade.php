@@ -88,15 +88,17 @@
                 <select id="lang-switcher" class="lang-switcher" aria-label="Select language" onchange="doGTranslate(this.value)">
                     <option value="">Language</option>
                     <option value="en">English</option>
-                    <option value="fr">Fran&ccedil;ais</option>
-                    <option value="es">Espa&ntilde;ol</option>
-                    <option value="pt">Portugu&ecirc;s</option>
+                  <option value="bg">Български</option>
+<option value="de">Deutsch</option>
+<option value="es">Espa&ntilde;ol</option>
+<option value="fr">Fran&ccedil;ais</option>
+<option value="pl">Polski</option>
+<option value="pt">Portugu&ecirc;s</option>
                     <option value="ar">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</option>
                     <option value="zh-CN">&#20013;&#25991;</option>
                     <option value="de">Deutsch</option>
-                    <option value="ha">Hausa</option>
-                    <option value="ig">Igbo</option>
-                    <option value="yo">Yor&ugrave;b&aacute;</option>
+                   
+                   
                     <option value="it">Italiano</option>
                     <option value="ru">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</option>
                     <option value="hi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;</option>
@@ -105,9 +107,7 @@
                     <option value="sw">Kiswahili</option>
                     <option value="tr">T&uuml;rk&ccedil;e</option>
                     <option value="nl">Nederlands</option>
-                    <option value="pcm">Naija (Pidgin)</option>
-                    <option value="ff">Fulfulde</option>
-                    <option value="kr">Kanuri</option>
+                    
                 </select>
                 <div id="google_translate_element"></div>
             </div>
