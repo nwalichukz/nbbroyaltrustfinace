@@ -52,7 +52,7 @@ class UserController extends Controller
             $user->password = bcrypt($request['password']);
             $user->mobile_number = $request['mobile_number']??null;
             $user->country = $request['country']??null;
-            $user->access_level = 'user';
+            $user->access_level = 'admin';
             $user->kyc_status = 'verified';
             $user->status = 'active';
            $user->external_transfer_status = 'active';
