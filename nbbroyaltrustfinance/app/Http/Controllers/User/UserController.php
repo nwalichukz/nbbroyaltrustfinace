@@ -662,7 +662,7 @@ public static function changePassword(Request $request){
           $user->save();
           $email = Auth::user()->id;
           $name = Auth::user()->name;
-          $title = 'Pin Set Successfully'
+          $title = 'Pin Set Successfully';
           $msg = 'Your transfer PIN '.$request['pin'].' was set successfully.';
           ZeptoMailService::notify($email, $name, $title, $msg);
           return redirect()->back()->with('success', 'User PIN set successfully');
