@@ -627,7 +627,10 @@ class UserWalletController extends Controller
     if ($validation->fails()) {
         return redirect()->back()->withErrors($validation);
     }
+            if(!isset(Auth::user()->pin)){
+                return redirect('client/setpin')->with('error','Please set Your Pin. You cannot perform transfer without a Pin');
 
+                if(!isset(Auth::user()->pin)){ 
     if (self::checkAmt($request['sender_user_id'], $request['amount'])) {
 
      /*   if (SendOtpController::verifyCodeOnly($request['sender_user_id'], $request['otp']) == true) {
@@ -675,6 +678,9 @@ class UserWalletController extends Controller
     } else {
         return redirect()->back()->with('error', 'You do not have sufficient balance in your wallet to carry out this transaction');
     }
+  }else{
+     return redirect()->back()->with('error', 'Wrong PIN');
+  }
 }
 
 
