@@ -209,24 +209,25 @@
                 </div>
 
                 <div class="footer-col">
-                    <h4>Institution</h4>
+                    <h4>Get in Touch</h4>
                     <ul>
                         <li><a href="{{ url('/about') }}">About Us</a></li>
                         {{--<li><a href="{{ url('/governance') }}">Governance &amp; Compliance</a></li>
                         <li><a href="{{ url('/insights') }}">Insights &amp; Research</a></li>
                         <li><a href="{{ url('/careers') }}">Careers</a></li>--}}
                         <li><a href="{{ url('/contact') }}">Contact</a></li>
+                          <li><a href="{{ url('/login') }}">Client Login</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-col">
-                    <h4>Support</h4>
+                    {{-- <h4>Support</h4>
                     <ul>
-                        {{--<li><a href="{{ url('/security') }}">Security Centre</a></li>
+                       <li><a href="{{ url('/security') }}">Security Centre</a></li>
                         <li><a href="{{ url('/faqs') }}">FAQs</a></li>
-                        <li><a href="{{ url('/complaints') }}">Complaints Procedure</a></li>--}}
-                        <li><a href="{{ url('/login') }}">Client Login</a></li>
-                    </ul>
+                        <li><a href="{{ url('/complaints') }}">Complaints Procedure</a></li>
+                      
+                    </ul>--}}
                 </div>
             </div>
         </div>
