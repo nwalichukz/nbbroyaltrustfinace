@@ -199,22 +199,22 @@
                 </div>
 
                 <div class="footer-col">
-                    <h4>Services</h4>
+                    {{--<h4>Services</h4>
                     <ul>
                         <li><a href="{{ url('/private-banking') }}">Private Banking</a></li>
                         <li><a href="{{ url('/corporate-institutional') }}">Corporate &amp; Institutional</a></li>
                         <li><a href="{{ url('/wealth-management') }}">Wealth Management</a></li>
                         <li><a href="{{ url('/international-payments') }}">International Payments</a></li>
-                    </ul>
+                    </ul>--}}
                 </div>
 
                 <div class="footer-col">
                     <h4>Institution</h4>
                     <ul>
                         <li><a href="{{ url('/about') }}">About Us</a></li>
-                        <li><a href="{{ url('/governance') }}">Governance &amp; Compliance</a></li>
+                        {{--<li><a href="{{ url('/governance') }}">Governance &amp; Compliance</a></li>
                         <li><a href="{{ url('/insights') }}">Insights &amp; Research</a></li>
-                        <li><a href="{{ url('/careers') }}">Careers</a></li>
+                        <li><a href="{{ url('/careers') }}">Careers</a></li>--}}
                         <li><a href="{{ url('/contact') }}">Contact</a></li>
                     </ul>
                 </div>
@@ -222,9 +222,9 @@
                 <div class="footer-col">
                     <h4>Support</h4>
                     <ul>
-                        <li><a href="{{ url('/security') }}">Security Centre</a></li>
+                        {{--<li><a href="{{ url('/security') }}">Security Centre</a></li>
                         <li><a href="{{ url('/faqs') }}">FAQs</a></li>
-                        <li><a href="{{ url('/complaints') }}">Complaints Procedure</a></li>
+                        <li><a href="{{ url('/complaints') }}">Complaints Procedure</a></li>--}}
                         <li><a href="{{ url('/login') }}">Client Login</a></li>
                     </ul>
                 </div>
