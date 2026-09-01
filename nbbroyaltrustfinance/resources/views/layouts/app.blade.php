@@ -271,7 +271,7 @@
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
             pageLanguage: 'en',
-            includedLanguages: 'en,fr,es,pt,ar,zh-CN,de,ha,ig,yo,it,ru,hi,ja,ko,sw,tr,nl,pcm,ff,kr',
+            includedLanguages: 'en,fr,es,pt,ar,zh-CN,de,ha,ig,yo,it,ru,hi,ja,ko,sw,tr,nl,pcm,ff,kr,pl',
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
             autoDisplay: false
         }, 'google_translate_element');
