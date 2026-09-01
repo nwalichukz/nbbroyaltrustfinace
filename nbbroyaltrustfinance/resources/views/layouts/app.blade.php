@@ -155,9 +155,9 @@
             <button class="nav-drawer__close" id="nav-drawer-close" aria-label="Close menu">&times;</button>
         </div>
         <ul class="nav-drawer__links">
-            <li><a href="{{ url('/private-banking') }}">Private Banking</a></li>
+            {{--<li><a href="{{ url('/private-banking') }}">Private Banking</a></li>
             <li><a href="{{ url('/corporate-institutional') }}">Corporate &amp; Institutional</a></li>
-            <li><a href="{{ url('/wealth-management') }}">Wealth Management</a></li>
+            <li><a href="{{ url('/wealth-management') }}">Wealth Management</a></li>--}}
             <li><a href="{{ url('/about') }}">About</a></li>
             <li><a href="{{ url('/insights') }}">Insights</a></li>
             <li><a href="{{ url('/contact') }}">Contact</a></li>
