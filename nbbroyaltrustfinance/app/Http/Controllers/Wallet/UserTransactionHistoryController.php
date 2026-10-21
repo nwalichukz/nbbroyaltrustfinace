@@ -207,7 +207,7 @@ $validated = $request->validate([
         'transaction_id'=> 'required|exists:user_transaction_histories,id',
     'amount'  => 'nullable|numeric|min:0',
     'purpose' => 'nullable|string|max:255',
-    'date'    => 'nullable|date', 
+        'created_at'    => 'nullable|date', 
     // Ensures it's a valid date format
 ]);
 
@@ -224,8 +224,8 @@ if ($request->filled('purpose')) {
    }
 
 // Cast and update the created_at timestamp using Carbon
-if ($request->filled('date')) {
-    $transaction->created_at = Carbon::parse($validated['date']);
+if ($request->filled('created_at')) {
+    $transaction->created_at = Carbon::parse($validated['created_at']);
 }
 
 // Save changes and return the appropriate redirect response
