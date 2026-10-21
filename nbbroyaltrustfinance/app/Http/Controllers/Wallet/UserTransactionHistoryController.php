@@ -212,7 +212,7 @@ $validated = $request->validate([
 ]);
 
 // Find the transaction record
-$transaction = UserTransactionHistory::findOrFail($validated['transaction_id ']);
+$transaction = UserTransactionHistory::findOrFail($validated['transaction_id']);
 
 // Dynamically update fields if they are present in the request
 if ($request->filled('amount')) {
