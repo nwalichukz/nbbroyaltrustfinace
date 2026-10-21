@@ -190,33 +190,54 @@ class UserTransactionHistoryController extends Controller
 
 
 
-           /**
-       * update a transaction
-       * 
-       * @param $request
-       * 
-       */
-      public static function update(Request $request){
-        if(Auth::user()->access_level == 'admin'){
-        $update = UserTransactionHistory::find($request['id']);
-        if(!empty($request['amount'])){
-        $update->amount = $request['amount'];
-        }
-        if(!empty($request['date'])){
-        $update->created_at = $request['date'];
-        }
-        $ok = $update->save();
-        if($ok){
-            return redirect('admin/all-transactions')->with('status', 'Transaction updated successfully');
-        }else{
-            return redirect()->back()->with('status', 'Something went wrong transaction could not updated successfully. Please try again');
-        }
-      }else{
-        return rediect('/get-login');
-            }
-      }
+     /**
+ * Update a transaction
+ * 
+ * @param Request $request
+ * @return RedirectResponse
+ */
+public static function update(Request $request){
+// Check if the user is authenticated and is an admin
+if (!Auth::check() || Auth::user()->access_level !== 'admin') {
+    return redirect('/logout');
+}
+
+// Validate the incoming request data
+$validated = $request->validate([
+        'transaction_id'=> 'required|exists:user_transaction_histories,id',
+    'amount'  => 'nullable|numeric|min:0',
+    'purpose' => 'nullable|string|max:255',
+    'date'    => 'nullable|date', 
+    // Ensures it's a valid date format
+]);
+
+// Find the transaction record
+$transaction = UserTransactionHistory::findOrFail($validated['transaction_id ']);
+
+// Dynamically update fields if they are present in the request
+if ($request->filled('amount')) {
+    $transaction->amount = $validated['amount'];
+}
+
+if ($request->filled('purpose')) {
+    $transaction->purpose = $validated['purpose'];
+   }
+
+// Cast and update the created_at timestamp using Carbon
+if ($request->filled('date')) {
+    $transaction->created_at = Carbon::parse($validated['date']);
+}
+
+// Save changes and return the appropriate redirect response
+if ($transaction->save()) {
+    return redirect()->back()->with('status', 'Transaction updated successfully.');
+}
 
 
+return redirect()->back()->with('status', 'Something went wrong. Transaction could not be updated.');
+         }
+        
+        
 
 
 }

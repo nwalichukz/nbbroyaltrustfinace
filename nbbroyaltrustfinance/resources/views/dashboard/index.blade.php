@@ -76,16 +76,17 @@
                             <td>{{ $row['transaction_type'] }}</td>
                             <td class="cell-mono">{{ number_format($row['amount']) }}</td>
                             <td><span class="status-pill status-pill--{{ $row['status'] ?? 'active' }}">{{ $row['status'] ?? 'Completed' }}</span></td>
+
                             <td>{{ \Carbon\Carbon::parse($row->created_at)->format('d M Y H:i') }}</td>
                             <td style="text-align: right;">
-                                <button 
-                                    type="button" 
-                                    class="admin-edit-btn" 
-                                    onclick="openAdminEditModal('{{ $row->id }}', '{{ addslashes($row->purpose ?? '') }}', '{{ \Carbon\Carbon::parse($row->created_at)->format('Y-m-d\TH:i') }}')"
-                                >
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    Edit
-                                </button>
+<button type="button" class="admin-edit-btn"
+    data-id="{{ $row->id }}"
+    data-purpose="{{ $row->purpose }}"
+    data-date="{{ \Carbon\Carbon::parse($row->created_at)->format('Y-m-d\TH:i') }}"
+    onclick="openAdminEditModal(this)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+    Edit
+</button>
                             </td>
                         </tr>
                     @endforeach
@@ -100,15 +101,13 @@
             <button type="button" class="admin-modal-close" onclick="closeAdminEditModal()">&times;</button>
             
             <div class="admin-modal-header">
-                <h3>Edit Transaction Details</h3>
-                <p>Modify transaction purpose or timestamp for auditing purposes.</p>
-            </div>
+    <h3>Edit Transaction Details</h3>
+    <p>Editing <strong id="admin_edit_tx_ref" class="cell-mono">NBB-TX-</strong>. Modify the purpose or timestamp for auditing purposes.</p>
+</div>
 
-            <form action="{{ url('admin.transactions.update') }}" method="POST">
-                @csrf
-                @method('PUT')
-
-                <input type="hidden" name="transaction_id" id="admin_edit_tx_id">
+   <form action="{{ url('/update/transaction') }}" method="POST">
+    @csrf
+    <input type="hidden" name="transaction_id" id="admin_edit_tx_id">
 
                 <div class="form-group" style="margin-bottom: 1.2rem;">
                     <label for="admin_edit_tx_purpose" class="form-label" style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color: #081C33;">Purpose / Description</label>
@@ -199,17 +198,28 @@
         }
     </style>
 
-    <script>
-        function openAdminEditModal(id, purpose, dateString) {
-            document.getElementById('admin_edit_tx_id').value = id;
-            document.getElementById('admin_edit_tx_purpose').value = purpose;
-            document.getElementById('admin_edit_tx_date').value = dateString;
-            document.getElementById('adminEditTxModal').style.display = 'flex';
-        }
+   <script>
+    function openAdminEditModal(btn) {
+        var id = btn.dataset.id;
 
-        function closeAdminEditModal() {
-            document.getElementById('adminEditTxModal').style.display = 'none';
-        }
-    </script>
+        document.getElementById('admin_edit_tx_id').value = id;
+        document.getElementById('admin_edit_tx_ref').textContent = 'NBB-TX-' + id;
+        document.getElementById('admin_edit_tx_purpose').value = btn.dataset.purpose || '';
+        document.getElementById('admin_edit_tx_date').value = btn.dataset.date;
+        document.getElementById('adminEditTxModal').style.display = 'flex';
+    }
+
+    function closeAdminEditModal() {
+        document.getElementById('adminEditTxModal').style.display = 'none';
+    }
+
+    // Close on backdrop click or Escape
+    document.getElementById('adminEditTxModal').addEventListener('click', function (e) {
+        if (e.target === this) closeAdminEditModal();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeAdminEditModal();
+    });
+</script>
 
 @endsection

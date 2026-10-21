@@ -50,20 +50,9 @@ Route::get('admin/dashboard', function () {
 
 
 
-
-
-
-
 Route::get('/faq', function () {
     return view('landing/faq')->with(['title'=>'FAQ']);
 });
-
-
-
-
-
-
-
 
 
 Route::get('/get-transactions', function () {
@@ -128,7 +117,7 @@ Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store']
 Route::view('/login', 'login')->name('login'); 
 Route::view('/register', 'register');
 
-
+Route::post('/update/transaction', [UserTransactionHistoryController::class, 'update']);
 
 
 Route::post('/create-user', [UserController::class, 'create']);
