@@ -36,84 +36,9 @@
             <div class="stat-card__value">£{{number_format($totalWallet)}}</div>
             <div class="stat-card__label">Total client balances</div>
         </div>
-
-        {{--<div class="stat-card">
-            <div class="stat-card__top">
-                <span class="stat-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
-                <span class="stat-card__trend down">Needs review</span>
-            </div>
-            <div class="stat-card__value">17</div>
-            <div class="stat-card__label">Pending approvals</div>
-        </div>--}}
-
-        {{--<div class="stat-card">
-            <div class="stat-card__top">
-                <span class="stat-card__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg></span>
-                <span class="stat-card__trend down">3 flagged</span>
-            </div>
-            <div class="stat-card__value">6</div>
-            <div class="stat-card__label">Suspended accounts</div>
-        </div>--}}
     </div>
 
-    <div class="db-form-grid db-form-grid--split">
-        {{-- ---------- Funding activity chart ---------- --}}
-        {{--<div class="db-card">
-            <div class="db-card__head">
-                <div>
-                    <span class="u-eyebrow">Last 7 days</span>
-                    <h2 style="margin-top:0.4rem;">Funds added vs. withdrawn</h2>
-                </div>
-            </div>--}}
-            {{--<div class="bar-chart" role="img" aria-label="Bar chart of funds added versus withdrawn over the last seven days">
-                @php($days = ['Mon' => [62,38], 'Tue' => [74,41], 'Wed' => [58,52], 'Thu' => [88,34], 'Fri' => [96,60], 'Sat' => [40,20], 'Sun' => [33,18]])
-                @foreach($days as $day => $vals)
-                    <div class="bar-chart__col">
-                        <div style="display:flex; align-items:flex-end; gap:4px; height:120px;">
-                            <div class="bar-chart__bar" style="height:{{ $vals[0] }}%;" title="Added"></div>
-                            <div class="bar-chart__bar is-accent" style="height:{{ $vals[1] }}%;" title="Withdrawn"></div>
-                        </div>
-                        <span class="bar-chart__label">{{ $day }}</span>
-                    </div>
-                @endforeach
-            </div>
-        </div>--}}
-
-        {{-- ---------- Pending approvals widget ---------- --}}
-        {{--<div class="db-card">
-            <div class="db-card__head">
-                <div>
-                    <span class="u-eyebrow">Action needed</span>
-                    <h2 style="margin-top:0.4rem;">Pending client approvals</h2>
-                </div>
-            </div>
-            <div style="display:flex; flex-direction:column; gap:0.8rem;">
-                @foreach([
-                    ['name' => 'Daniel Owusu', 'country' => 'Ghana', 'initials' => 'DO'],
-                    ['name' => 'Fatima Al-Sayed', 'country' => 'UAE', 'initials' => 'FA'],
-                    ['name' => 'Chen Wei', 'country' => 'Singapore', 'initials' => 'CW'],
-                ] as $client)
-                    <div class="client-card">
-                        <span class="avatar">{{ $client['initials'] }}</span>
-                        <div class="client-card__meta" style="flex:1;">
-                            <strong>{{ $client['name'] }}</strong>
-                            <span>{{ $client['country'] }} &middot; Awaiting KYC review</span>
-                        </div>
-                        <button class="icon-btn approve" aria-label="Approve {{ $client['name'] }}"
-                            data-confirm
-                            data-confirm-title="Approve client?"
-                            data-confirm-body="<strong>{{ $client['name'] }}</strong> will be granted an active account and full banking access."
-                            data-confirm-label="Approve client"
-                            data-confirm-style="primary"
-                            data-success-message="{{ $client['name'] }} approved.">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l6 6L20 6"/></svg>
-                        </button>
-                    </div>
-                @endforeach
-            </div>
-            <a href="{{ url('dashboard.users') ?? url('/dashboard/users') }}" class="btn btn--ghost" style="margin-top:1.1rem;">View all pending clients</a>
-        </div>--}}
-    </div>
+    <div class="db-form-grid db-form-grid--split"></div>
 
     {{-- ---------- Recent transactions ---------- --}}
     <div class="db-card" style="margin-top:1.4rem;">
@@ -135,33 +60,156 @@
                         <th>Amount</th>
                         <th>Status</th>
                         <th>Date</th>
+                        <th style="text-align: right;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php($rows = [
-                        ['name' => 'Amara Chukwu', 'initials' => 'AC', 'ref' => 'NBB-TX-88213', 'type' => 'Funds added', 'amount' => '+£12,500.00', 'status' => 'active', 'label' => 'Completed', 'date' => '13 Aug 2026'],
-                        ['name' => 'James Whitfield', 'initials' => 'JW', 'ref' => 'NBB-TX-88207', 'type' => 'International transfer', 'amount' => '-£3,200.00', 'status' => 'pending', 'label' => 'Processing', 'date' => '13 Aug 2026'],
-                        ['name' => 'Priya Nair', 'initials' => 'PN', 'ref' => 'NBB-TX-88198', 'type' => 'Funds added', 'amount' => '+£860.00', 'status' => 'active', 'label' => 'Completed', 'date' => '12 Aug 2026'],
-                        ['name' => 'Olumide Bakare', 'initials' => 'OB', 'ref' => 'NBB-TX-88184', 'type' => 'Withdrawal', 'amount' => '-£5,000.00', 'status' => 'suspended', 'label' => 'Flagged', 'date' => '12 Aug 2026'],
-                    ])
                     @foreach($transactions as $row)
                         <tr>
                             <td>
                                 <div class="cell-user">
-                                    <span class="avatar">{{ strtoupper(substr($row->user->name, 0, 2)) }}</span>
-                                    <div class="cell-user__meta"><strong>{{ $row->user->name }}</strong></div>
+                                    <span class="avatar">{{ strtoupper(substr($row->user->name ?? 'NA', 0, 2)) }}</span>
+                                    <div class="cell-user__meta"><strong>{{ $row->user->name ?? 'N/A' }}</strong></div>
                                 </div>
                             </td>
                             <td class="cell-mono">NBB-TX-{{ $row['id'] }}</td>
                             <td>{{ $row['transaction_type'] }}</td>
                             <td class="cell-mono">{{ number_format($row['amount']) }}</td>
-                            <td><span class="status-pill status-pill--{{ $row['status'] }}">{{ $row['status'] }}</span></td>
-                            <td>{{ $row->created_at->format('d M Y') }}</td>
+                            <td><span class="status-pill status-pill--{{ $row['status'] ?? 'active' }}">{{ $row['status'] ?? 'Completed' }}</span></td>
+                            <td>{{ \Carbon\Carbon::parse($row->created_at)->format('d M Y H:i') }}</td>
+                            <td style="text-align: right;">
+                                <button 
+                                    type="button" 
+                                    class="admin-edit-btn" 
+                                    onclick="openAdminEditModal('{{ $row->id }}', '{{ addslashes($row->purpose ?? '') }}', '{{ \Carbon\Carbon::parse($row->created_at)->format('Y-m-d\TH:i') }}')"
+                                >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    Edit
+                                </button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </div>
+
+    {{-- ===================== ADMIN EDIT TRANSACTION MODAL ===================== --}}
+    <div id="adminEditTxModal" class="admin-modal-backdrop">
+        <div class="admin-modal-card">
+            <button type="button" class="admin-modal-close" onclick="closeAdminEditModal()">&times;</button>
+            
+            <div class="admin-modal-header">
+                <h3>Edit Transaction Details</h3>
+                <p>Modify transaction purpose or timestamp for auditing purposes.</p>
+            </div>
+
+            <form action="{{ url('admin.transactions.update') }}" method="POST">
+                @csrf
+                @method('PUT')
+
+                <input type="hidden" name="transaction_id" id="admin_edit_tx_id">
+
+                <div class="form-group" style="margin-bottom: 1.2rem;">
+                    <label for="admin_edit_tx_purpose" class="form-label" style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color: #081C33;">Purpose / Description</label>
+                    <input type="text" name="purpose" id="admin_edit_tx_purpose" class="form-control" required style="width:100%; padding:0.65rem; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="admin_edit_tx_date" class="form-label" style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color: #081C33;">Transaction Date &amp; Time</label>
+                    <input type="datetime-local" name="created_at" id="admin_edit_tx_date" class="form-control" required style="width:100%; padding:0.65rem; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;">
+                </div>
+
+                <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
+                    <button type="button" class="btn btn--outline-dark" onclick="closeAdminEditModal()" style="padding:0.6rem 1.2rem;">Cancel</button>
+                    <button type="submit" class="btn btn--primary" style="padding:0.6rem 1.2rem;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .admin-edit-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: #ffffff;
+            color: #081C33;
+            border: 1px solid #cbd5e1;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .admin-edit-btn:hover {
+            background: #081C33;
+            color: #ffffff;
+            border-color: #081C33;
+        }
+
+        /* Modal Styles */
+        .admin-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(8, 28, 51, 0.55);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .admin-modal-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 480px;
+            padding: 2rem;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.25rem;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        .admin-modal-header h3 {
+            margin: 0 0 0.3rem 0;
+            color: #081C33;
+            font-size: 1.2rem;
+        }
+
+        .admin-modal-header p {
+            margin: 0 0 1.2rem 0;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+    </style>
+
+    <script>
+        function openAdminEditModal(id, purpose, dateString) {
+            document.getElementById('admin_edit_tx_id').value = id;
+            document.getElementById('admin_edit_tx_purpose').value = purpose;
+            document.getElementById('admin_edit_tx_date').value = dateString;
+            document.getElementById('adminEditTxModal').style.display = 'flex';
+        }
+
+        function closeAdminEditModal() {
+            document.getElementById('adminEditTxModal').style.display = 'none';
+        }
+    </script>
 
 @endsection
