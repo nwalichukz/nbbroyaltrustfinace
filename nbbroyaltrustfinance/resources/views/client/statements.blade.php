@@ -13,16 +13,29 @@
         </div>
     </div>
 
+    <!-- Account Overview Meta Card -->
+    <div class="db-card info-card">
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">Account Holder</span>
+                <strong class="info-value">{{ auth()->user()->name }}</strong>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Available Balance</span>
+                <strong class="info-value balance-value">${{ number_format(auth()->user()->userwallet->balance ?? 0.00, 2) }}</strong>
+            </div>
+        </div>
+    </div>
+
     <!-- Filter & Generator Card -->
     <div class="db-card filter-card">
         <form class="statement-filter-form" action="{{ url('statements/generate') }}" method="POST">
              @csrf
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="email_address">Enter Email Address</label>
-                    <input type="email" name="email_address" id="email_address" class="form-control" placeholder="example@email.com" required>
-                </div>
+             
+            <!-- Hidden Authenticated User Email Input -->
+            <input type="hidden" name="email_address" value="{{ auth()->user()->email }}">
 
+            <div class="form-grid">
                 <div class="form-group">
                     <label for="start_date">Start Date</label>
                     <input type="date" name="start_date" id="start_date" class="form-control" required>
@@ -51,6 +64,7 @@
             --color-border: #e2e8f0;
             --color-ink: #0f172a;
             --color-ink-soft: #64748b;
+            --color-success: #16a34a;
         }
 
         .db-page-head {
@@ -63,6 +77,37 @@
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
+        }
+
+        /* Info Card Structural Styles */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-ink-soft);
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-size: 1.25rem;
+            color: var(--color-brand);
+            font-weight: 700;
+        }
+
+        .balance-value {
+            color: var(--color-success);
         }
 
         /* Filter Form */
