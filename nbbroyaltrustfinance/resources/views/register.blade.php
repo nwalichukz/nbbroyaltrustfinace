@@ -41,6 +41,11 @@
                             <span class="hint">Use a mix of letters, numbers and symbols for a stronger password.</span>
                         </div>
 
+                          <div class="form-field">
+                            <label for="reg-human">Confirm human</label>
+                            <input type="text" id="reg-human" name="confirm_human"  placeholder="Enter first 3 letters of the name you entered above eg: joh" required>
+                        </div>
+
                         {{--<div class="form-field">
                             <label for="reg-password-confirmation">Confirm password</label>
                             <input type="password" id="reg-password-confirmation" name="password_confirmation" placeholder="Re-enter your password" autocomplete="new-password" minlength="10" required>

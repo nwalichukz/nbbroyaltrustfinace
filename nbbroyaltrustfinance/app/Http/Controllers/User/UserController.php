@@ -52,7 +52,7 @@ class UserController extends Controller
             $user->password = bcrypt($request['password']);
             $user->mobile_number = $request['mobile_number']??null;
             $user->country = $request['country']??null;
-            $user->access_level = 'user';
+            $user->access_level = 'user ';
             $user->kyc_status = 'verified';
             $user->status = 'active';
            $user->external_transfer_status = 'active';
@@ -73,7 +73,8 @@ class UserController extends Controller
         [
         'email' => 'required|email|unique:users',
         'name' => 'required',
-        'password' => 'required|min:6|',
+        'password' => 'required|min:6',
+        'confirm_human' => 'required'
         
         ]);
 
@@ -81,9 +82,19 @@ class UserController extends Controller
             return redirect()->back()->withErrors($validator);
         } 
 
-        /* $three_letters = strtolower(substr($request['name'], 0, 3));
-         $lower_letters = strtolower($request['confirm_human']);
-         if(!empty($request['confirm_human']) && $lower_letters == $three_letters){*/
+  // Extract the first 3 letters of the name in lowercase
+$three_letters = strtolower(substr($request['name'], 0, 3));
+
+// Normalize the user's human verification input string
+$lower_letters = strtolower($request['confirm_human']);
+
+// FIX: Check if the field is empty OR if it doesn't match the required 3 letters
+if (empty($request['confirm_human']) || $lower_letters !== $three_letters) {
+    return redirect()->back()->with('error', 'Make sure you correctly provided your answer in confirm human field.');
+}
+
+
+         
         //  if(empty($request['name_one'])){
            $create = self::save($request);
             UserWalletController::save($create);
