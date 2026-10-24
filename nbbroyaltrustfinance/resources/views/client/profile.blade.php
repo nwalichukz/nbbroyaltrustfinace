@@ -48,11 +48,13 @@
 
                         <!-- Delete Photo Form (Only shows if avatar exists) -->
                         @if(!empty(Auth::user()->avatar))
-                            <form action="{{ url('/client/profile/avatar') }}" method="POST">
+                            <form action="{{ url('/admin/img-update') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                @method('DELETE')
+                                @method('POST')
+                                 <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                                 <input type="file" name="avatar" accept="image/*" required style="font-size: 0.85rem; max-width: 220px;">
                                 <button type="submit" class="btn-danger-outline" style="background: none; border: 1px solid #dc2626; color: #dc2626; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer;">
-                                    Remove Current Photo
+                                    Replace Current Photo
                                 </button>
                             </form>
                         @endif
