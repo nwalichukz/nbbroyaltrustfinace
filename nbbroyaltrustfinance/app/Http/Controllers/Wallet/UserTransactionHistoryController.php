@@ -98,12 +98,9 @@ class UserTransactionHistoryController extends Controller
      */
     public static function getHistoryToday(){
       $today = Carbon::today();
-       return UserTransactionHistory::whereDate('created_at', $today)->where('purpose', 'post view bonus')
-                                                ->where('transaction_type', 'credit')
-                                                ->sum('amount');
-      
-
-    }
+       return UserTransactionHistory::whereDate('created_at', $today)->where('purpose', 'post view bonus');
+          }
+                                
 
       /***
      * returns transaction history
@@ -112,9 +109,7 @@ class UserTransactionHistoryController extends Controller
     public static function getHistoryThisWeek(){
       $now = Carbon::today();
       $weekstart = $now->startOfWeek();
-       return UserTransactionHistory::whereDate('created_at', '>=', $weekstart)->where('purpose', 'post view bonus')
-                                                ->where('transaction_type', 'credit')
-                                                ->sum('amount');
+       return UserTransactionHistory::whereDate('created_at', '>=', $weekstart)->where('purpose', 'post view bonus')->where('transaction_type', 'credit')->sum('amount');
       
 
     }
@@ -126,12 +121,10 @@ class UserTransactionHistoryController extends Controller
     public static function getHistoryThisMonth(){
       $now = Carbon::today();
       $monthstart = $now->startOfMonth();
-       return UserTransactionHistory::whereDate('created_at', '>=', $monthstart)->where('purpose', 'post view bonus')
-                                                ->where('transaction_type', 'credit')
-                                                ->sum('amount');
+       return UserTransactionHistory::whereDate('created_at', '>=', $monthstart)->where('purpose', 'post view bonus')->where('transaction_type', 'credit')->sum('amount');
       
-
     }
+
 
      /***
      * returns transaction history
@@ -140,11 +133,8 @@ class UserTransactionHistoryController extends Controller
     public static function getHistoryThisYear (){
       $now = Carbon::today();
       $yearstart = $now->startOfYear();
-       return UserTransactionHistory::whereDate('created_at', '>=', $yearstart)->where('purpose', 'post view bonus')
-                                                ->where('transaction_type', 'credit')
-                                                ->sum('amount');
+       return UserTransactionHistory::whereDate('created_at', '>=', $yearstart)->where('purpose', 'post view bonus')->where('transaction_type', 'credit')->sum('amount');
       
-
     }
 
 
@@ -191,7 +181,7 @@ class UserTransactionHistoryController extends Controller
 
 
 
-     /**
+/**
  * Update a transaction
  * 
  * @param Request $request
@@ -239,6 +229,41 @@ return redirect()->back()->with('status', 'Something went wrong. Transaction cou
          }
         
         
+/**
+ * generate account statement
+ * 
+ * @param Request $request
+ * @return View
+ */
+  public function generateStatement(Request $request)
+     {
+    // 1. Validate the revised request inputs
+    $request->validate([
+        'email_address' => 'required|email',
+        'start_date'    => 'required|date',
+        'end_date'      => 'required|date|after_or_equal:start_date',
+    ]);
+
+    // 2. Locate the user identity record
+    $user = User::where('email', $request->email_address)->first();
+
+    if (!$user) {
+        return back()->withErrors(['email_address' => 'No account records found for this email address.']);
+    }
+
+    // 3. Normalize the dates to capture full days (00:00:00 to 23:59:59)
+    $startDate = Carbon::parse($request->start_date)->startOfDay();
+    $endDate = Carbon::parse($request->end_date)->endOfDay();
+
+    // 4. Extract transactional history within the specific time interval
+    $transactions = UserTransactionHistory::where('user_id', $user->id)
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    // 5. Send payload properties down to the visualization dashboard
+    return view('client.account-statement-display', compact('user', 'transactions', 'request'));
+   }
 
 
 }
