@@ -57,15 +57,15 @@
                         @foreach($transactions as $history)
                             <tr>
                                 <td>{{ $history->created_at->format('M d, Y H:i') }}</td>
-                                <td><code>{{ $history->reference ?? $history->id }}</code></td>
-                                <td>{{ $history->description ?? 'System Transaction Entry' }}</td>
+                                <td><code>NBB-TX-{{ $history->id }}</code></td>
+                                <td>{{ $history->purpose ?? 'System Transaction Entry' }}</td>
                                 <td>
-                                    <span class="badge badge-{{ strtolower($history->type) }}">
-                                        {{ ucfirst($history->type) }}
+                                    <span class="badge badge-{{ strtolower($history->transaction_type) }}">
+                                        {{ ucfirst($history->transaction_type) }}
                                     </span>
                                 </td>
-                                <td class="text-right amount-cell {{ strtolower($history->type) == 'credit' ? 'text-success' : 'text-danger' }}">
-                                    {{ strtolower($history->type) == 'credit' ? '+' : '-' }}${{ number_format($history->amount, 2) }}
+                                <td class="text-right amount-cell {{ strtolower($history->transaction_type) == 'credit' ? 'text-success' : 'text-danger' }}">
+                                    {{ strtolower($history->transaction_type) == 'credit' ? '+' : '-' }}${{ number_format($history->amount, 2) }}
                                 </td>
                             </tr>
                         @endforeach
