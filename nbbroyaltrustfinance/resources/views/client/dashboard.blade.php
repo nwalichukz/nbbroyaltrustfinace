@@ -76,7 +76,7 @@
             </td>
     <td>{{ \Carbon\Carbon::parse($row->created_at)->format('d M, Y H:i') }}</td>
 
-{{--
+
 @if(Auth::user()->access_level == 'admin')
 <td style="text-align: right;">
 <button type="button" class="btn-edit-tx"  onclick="openEditTxModal('{{ $row->id }}', '{{ addslashes($row->purpose) }}', '{{ \Carbon\Carbon::parse($row->created_at)->format('Y-m-d\TH:i') }}')">                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -86,7 +86,7 @@
             Edit
             </button>
             </td>
-            @endif--}}
+            @endif
 
             </tr>
             @empty
@@ -100,7 +100,7 @@
     </div>
 
     {{-- ===================== EDIT TRANSACTION MODAL ===================== --}}
-    {{--<div id="editTxModal" class="tx-modal-backdrop">
+    <div id="editTxModal" class="tx-modal-backdrop">
         <div class="tx-modal-card">
             <button type="button" class="tx-modal-close" onclick="closeEditTxModal()">&times;</button>
             
@@ -131,7 +131,7 @@
                 </div>
             </form>
         </div>
-    </div>--}}
+    </div>
 
     <style>
         .btn-edit-tx {
